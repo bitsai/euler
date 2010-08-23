@@ -32,13 +32,13 @@
   (let [s (seq (str n))]
     (= s (reverse s))))
 
+(defn square [n] (* n n))
+
 (defmulti parse-int class)
 (defmethod parse-int String [s] (Integer/parseInt s))
 (defmethod parse-int Character [c] (parse-int (str c)))
 
 (defn digits [n] (map parse-int (str n)))
-
-(defn square [n] (* n n))
 
 (defn pythagorean? [[a b c]] (= (+ (square a) (square b)) (square c)))
 
