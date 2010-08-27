@@ -3,7 +3,7 @@
   (:use [clojure.java.io :only (reader)])
   (:require [clojure.string :as str]))
 
-(def lines (with-open [rdr (reader "names.txt")] (line-seq rdr)))
+(def lines (with-open [rdr (reader "../data/names.txt")] (line-seq rdr)))
 
 (def names (let [strip-quotes #(str/replace % "\"" "")
 		 split-commas #(str/split % #",")]
