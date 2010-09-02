@@ -53,3 +53,12 @@
 (defn triangle-nums [] (map #(n-choose-k (inc %) 2) (iterate inc 1)))
 
 (defn has? [coll x] (some #{x} coll))
+
+(defn expt-mod-n
+  ([base pow n] (expt-mod-n base pow n 1))
+  ([base pow n acc]
+     (let [new-acc (rem (* base acc) n)]
+       (cond
+	(= 0 pow) 1
+	(= 1 pow) new-acc
+	:else (recur base (dec pow) n new-acc)))))
