@@ -14,5 +14,6 @@
 (timed-test
  "Problem 14"
  837799
- (let [pairs (map #(list % (count-terms %)) (range 1 1000000))]
+ (let [pair #(list % (count-terms %))
+       pairs (map pair (range 1 1000000))]
    (first (apply max-key second pairs))))

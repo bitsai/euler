@@ -31,17 +31,22 @@
 	   8 " eighty "
 	   9 " ninety "})
 
+(defn not-zero? [digit]
+  (and (not (nil? digit))
+       (not (zero? digit))))
+
 (defn digit-to-words [digit suffix]
-  (let [word (ones digit)]
-    (if word (str word suffix))))
+  (if (not-zero? digit)
+    (let [word (ones digit)]
+      (str word suffix))))
 
 (defn digits-to-words [ten one]
   (if (= ten 1) (teens one)
       (str (tens ten) (ones one))))
 
 (defn add-and [thousand hundred ten one]
-  (if (and (or (ones thousand) (ones hundred))
-	   (or (ones ten) (ones one)))
+  (if (and (or (not-zero? thousand) (not-zero? hundred))
+	   (or (not-zero? ten) (not-zero? one)))
     " and "))
 
 (defn num-to-words [n]

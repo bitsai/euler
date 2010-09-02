@@ -8,5 +8,5 @@
 (timed-test
  "Problem 15"
  137846528820
- (let [N 20]
-   (n-choose-k (* N 2) N)))
+ (let [n 20]
+   (n-choose-k (* 2 n) n)))

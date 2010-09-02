@@ -13,5 +13,6 @@
 (timed-test
  "Problem 26"
  983
- (let [pairs (map #(list % (period %)) (range 1 1000))]
+ (let [pair #(list % (period %))
+       pairs (map pair (range 1 1000))]
    (first (apply max-key second pairs))))
