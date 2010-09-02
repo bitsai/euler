@@ -1,16 +1,17 @@
 (ns p26
   (:use [utils :only (has? timed-test)]))
 
-(defn f [n d rs]
-  (let [r (rem (* n 10) d)]
-    (cond
-     (zero? r) 0
-     (has? rs r) (count (drop-while #(not= r %) rs))
-     :else (recur r d (conj rs r)))))
-
-(defn period [d] (f 1 d []))
+(defn period
+  ([d] (period 1 d []))
+  ([n d remainders]
+     (let [r (rem (* n 10) d)]
+       (cond
+	(zero? r) 0
+	(has? remainders r) (count (drop-while #(not= r %) remainders))
+	:else (period r d (conj remainders r))))))
 
 (timed-test
  "Problem 26"
  983
- (apply max-key period (range 1 1000)))
+ (let [pairs (map #(list % (period %)) (range 1 1000))]
+   (first (apply max-key second pairs))))

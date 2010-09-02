@@ -8,12 +8,11 @@
       (inc (* n 3))))
 
 (defn count-terms [n]
-  (if (= n 1) 1
+  (if (= 1 n) 1
       (inc (count-terms (next-term n)))))
-
-(def count-terms (memoize count-terms))
 
 (timed-test
  "Problem 14"
  837799
- (apply max-key count-terms (range 1 1000000)))
+ (let [pairs (map #(list % (count-terms %)) (range 1 1000000))]
+   (first (apply max-key second pairs))))
