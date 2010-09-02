@@ -50,7 +50,9 @@
 
 (defn n-choose-k [n k] (/ (falling-factorial n k) (factorial k)))
 
-(defn triangle-nums [] (map #(n-choose-k (inc %) 2) (iterate inc 1)))
+(defn whole-nums [] (iterate inc 1))
+
+(defn triangle-nums [] (map #(n-choose-k (inc %) 2) (whole-nums)))
 
 (defn has? [coll x] (some #{x} coll))
 
