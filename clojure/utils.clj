@@ -52,6 +52,8 @@
 
 (defn whole-nums [] (iterate inc 1))
 
+(defn natural-nums [] (iterate inc 0))
+
 (defn triangle-nums [] (map #(n-choose-k (inc %) 2) (whole-nums)))
 
 (defn has? [coll x] (some #{x} coll))
@@ -64,3 +66,5 @@
 	(= 0 pow) 1
 	(= 1 pow) new-acc
 	:else (recur base (dec pow) n new-acc)))))
+
+(defn quadratic [n a b] (+ (square n) (* a n) b))
