@@ -2,7 +2,7 @@
   (:use [utils :only (re-matches?)]))
 
 (let [directory (java.io.File. ".")
-      names (map #(.getName %) (.listFiles directory))
+      file-names (map #(.getName %) (.listFiles directory))
       is-solution? #(re-matches? #"p\d+\.clj" %)
-      solutions (filter is-solution? names)]
-  (dorun (map load-file solutions)))
+      solution-names (filter is-solution? file-names)]
+  (dorun (map load-file (sort solution-names))))
