@@ -68,3 +68,6 @@
 	:else (recur base (dec pow) n new-acc)))))
 
 (defn quadratic [n a b] (+ (square n) (* a n) b))
+
+(defn map-vals [f m]
+  (zipmap (keys m) (map f (vals m))))
