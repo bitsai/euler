@@ -53,12 +53,12 @@
 	     "728"
 	     "716"])
 
-(def nodes (apply concat traces))
+(def nodes (distinct (apply concat traces)))
 
 (def neighbors
   (let [pairs (mapcat #(partition 2 1 %) traces)
-	grouped (group-by second pairs)]
-    (map-vals #(map first %) grouped)))
+	groups (group-by second pairs)]
+    (map-vals #(distinct (map first %)) groups)))
 
 (def graph {:nodes nodes :neighbors neighbors})
 
