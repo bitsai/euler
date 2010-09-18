@@ -1,5 +1,6 @@
 (ns utils
-  (:use [clojure.contrib.math :only (sqrt)]))
+  (:use [clojure.contrib.math :only (sqrt)])
+  (:require [clojure.string :as str]))
 
 (defmacro timed-test [name answer code]
   `(do
@@ -23,6 +24,10 @@
     (set (apply concat factors))))
 
 (defn proper-divisors [n] (disj (factors n) n))
+
+(defn split-commas [s] (str/split s #","))
+
+(defn strip-quotes [s] (str/replace s "\"" ""))
 
 (defn prime? [n] (= 2 (count (factors n))))
 
