@@ -9,6 +9,8 @@
        abundants (vec (filter abundant? nums))
        sums-of-abundants (set (for [x abundants
 				    y abundants
-				    :while (< (+ x y) 20162)]
+				    :when (and
+					   (<= x y)
+					   (< (+ x y) 20162))]
 				(+ x y)))]
    (- (sum nums) (sum sums-of-abundants))))
