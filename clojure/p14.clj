@@ -1,5 +1,5 @@
 (ns p14
-  (:use [utils :only (timed-test)]))
+  (:use [utils :only (even? timed-test)]))
 
 ;; Tell Nick about jvm server mode
 

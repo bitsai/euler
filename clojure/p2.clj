@@ -1,5 +1,5 @@
 (ns p2
-  (:use [utils :only (sum timed-test)])
+  (:use [utils :only (even? sum timed-test)])
   (:use [clojure.contrib.lazy-seqs :only (fibs)]))
 
 (timed-test

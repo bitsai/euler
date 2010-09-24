@@ -2,6 +2,12 @@
   (:use [clojure.contrib.math :only (sqrt)])
   (:require [clojure.string :as str]))
 
+(defn even? 
+  "Returns true if n is even, throws an exception if n is not an integer" 
+  {:added "1.0" 
+   :static true} 
+  [n] (zero? (bit-and (long n) (long 1)))) 
+
 (defmacro timed-test [name answer code]
   `(do
      (println ~name)
