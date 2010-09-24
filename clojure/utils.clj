@@ -11,6 +11,8 @@
 (defn expt [base pow]
   (reduce *' (repeat pow base)))
 
+(defn fibs [] (map first (iterate (fn [[a b]] [b (+' a b)]) [0 1])))
+
 (defmacro timed-test [name answer code]
   `(do
      (println ~name)

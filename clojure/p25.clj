@@ -1,6 +1,5 @@
 (ns p25
-  (:use [utils :only (digits timed-test)])
-  (:use [clojure.contrib.lazy-seqs :only (fibs)]))
+  (:use [utils :only (digits fibs timed-test)]))
 
 (timed-test
  "Problem 25"
