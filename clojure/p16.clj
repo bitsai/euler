@@ -1,6 +1,5 @@
 (ns p16
-  (:use [utils :only (digits sum timed-test)])
-  (:use [clojure.contrib.math :only (expt)]))
+  (:use [utils :only (expt digits sum timed-test)]))
 
 (timed-test
  "Problem 16"

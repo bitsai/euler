@@ -2,11 +2,14 @@
   (:use [clojure.contrib.math :only (sqrt)])
   (:require [clojure.string :as str]))
 
-(defn even? 
-  "Returns true if n is even, throws an exception if n is not an integer" 
-  {:added "1.0" 
-   :static true} 
-  [n] (zero? (bit-and (long n) (long 1)))) 
+(defn even?
+  "Returns true if n is even, throws an exception if n is not an integer"
+  {:added "1.0"
+   :static true}
+  [n] (zero? (bit-and (long n) (long 1))))
+
+(defn expt [base pow]
+  (reduce *' (repeat pow base)))
 
 (defmacro timed-test [name answer code]
   `(do
@@ -19,9 +22,9 @@
 
 (defn divides? [dividend divisor] (zero? (rem dividend divisor)))
 
-(defn sum [coll] (reduce + coll))
+(defn sum [coll] (reduce +' coll))
 
-(defn product [coll] (reduce * coll))
+(defn product [coll] (reduce *' coll))
 
 (defn factors [n]
   (let [one-to-sqrt (range 1 (inc (sqrt n)))

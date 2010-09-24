@@ -1,6 +1,5 @@
 (ns p29
-  (:use [utils :only (timed-test)])
-  (:use [clojure.contrib.math :only (expt)]))
+  (:use [utils :only (expt timed-test)]))
 
 (timed-test
  "Problem 29"
