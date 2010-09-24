@@ -1,6 +1,5 @@
 (ns p97
-  (:use [utils :only (expt-mod-n digits timed-test)])
-  (:use [clojure.contrib.math :only (expt)]))
+  (:use [utils :only (expt-mod-n digits timed-test)]))
 
 (timed-test
  "Problem 97"

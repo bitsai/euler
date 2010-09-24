@@ -1,6 +1,5 @@
 (ns p30
-  (:use [utils :only (digits sum timed-test)])
-  (:use [clojure.contrib.math :only (expt)]))
+  (:use [utils :only (digits expt sum timed-test)]))
 
 (defn sum-of-5th-powers? [n]
   (let [fifth-powers (map #(expt % 5) (digits n))]
