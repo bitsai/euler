@@ -1,5 +1,5 @@
 (ns utils
-  (:use [clojure.contrib.math :only (sqrt)])
+  (:use [clojure.contrib.generic.math-functions :only (sqrt)])
   (:require [clojure.string :as str]))
 
 (defn even?
