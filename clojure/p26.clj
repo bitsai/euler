@@ -1,5 +1,5 @@
 (ns p26
-  (:use [utils :only (has? timed-test)]))
+  (:use [utils :only (has? max-key timed-test)]))
 
 (defn period
   ([d] (period 1 d []))
@@ -13,6 +13,4 @@
 (timed-test
  "Problem 26"
  983
- (let [pair #(list % (period %))
-       pairs (map pair (range 1 1000))]
-   (first (apply max-key second pairs))))
+ (apply max-key period (range 1 1000)))

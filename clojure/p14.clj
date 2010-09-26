@@ -1,5 +1,5 @@
 (ns p14
-  (:use [utils :only (even? timed-test)]))
+  (:use [utils :only (even? max-key timed-test)]))
 
 ;; Tell Nick about jvm server mode
 
@@ -14,6 +14,4 @@
 (timed-test
  "Problem 14"
  837799
- (let [pair #(list % (count-terms %))
-       pairs (map pair (range 1 1000000))]
-   (first (apply max-key second pairs))))
+ (apply max-key count-terms (range 1 1000000)))

@@ -2,16 +2,18 @@
   (:use [clojure.contrib.generic.math-functions :only (sqrt)])
   (:require [clojure.string :as str]))
 
-(defn even?
-  "Returns true if n is even, throws an exception if n is not an integer"
-  {:added "1.0"
-   :static true}
-  [n] (zero? (bit-and (long n) (long 1))))
+(defn even? [n] (false? (bit-test n 0)))
 
-(defn expt [base pow]
-  (reduce *' (repeat pow base)))
+(defn expt [base pow] (reduce *' (repeat pow base)))
 
 (defn fibs [] (map first (iterate (fn [[a b]] [b (+' a b)]) [0 1])))
+
+(defn max-key
+  ([k x] x)
+  ([k x y] (if (> (k x) (k y)) x y))
+  ([k x y & more]
+     (second (reduce (fn [x y] (if (> (first x) (first y)) x y))
+                     (map (juxt k identity) (cons x (cons y more)))))))
 
 (defmacro timed-test [name answer code]
   `(do
@@ -85,5 +87,4 @@
 
 (defn quadratic [n a b] (+ (square n) (* a n) b))
 
-(defn map-vals [f m]
-  (zipmap (keys m) (map f (vals m))))
+(defn map-vals [f m] (zipmap (keys m) (map f (vals m))))
