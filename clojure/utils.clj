@@ -10,10 +10,15 @@
 
 (defn max-key
   ([k x] x)
-  ([k x y] (if (> (k x) (k y)) x y))
-  ([k x y & more]
-     (second (reduce (fn [x y] (if (> (first x) (first y)) x y))
-                     (map (juxt k identity) (cons x (cons y more)))))))
+  ([k x & more]
+     (loop [x x
+            kx (k x)
+            s more]
+       (if-not s x
+	       (let [y (first s)
+		     ky (k y)]
+		 (if (> kx ky) (recur x kx (next s))
+		     (recur y ky (next s))))))))
 
 (defmacro timed-test [name answer code]
   `(do
