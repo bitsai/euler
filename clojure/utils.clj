@@ -37,9 +37,9 @@
 
 (defn factors [n]
   (let [one-to-sqrt (range 1 (inc (sqrt n)))
-	factors (for [i one-to-sqrt :when (divides? n i)]
-		  [i (/ n i)])]
-    (set (apply concat factors))))
+	factor-pairs (for [i one-to-sqrt :when (divides? n i)]
+		       [i (/ n i)])]
+    (set (apply concat factor-pairs))))
 
 (defn proper-divisors [n] (disj (factors n) n))
 
