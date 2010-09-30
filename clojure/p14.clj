@@ -3,13 +3,15 @@
 
 ;; Tell Nick about jvm server mode
 
-(defn next-term [n]
-  (if (even? n) (/ n 2)
-      (inc (* n 3))))
+(defn ^:static next-term ^long [^long n]
+  (if (even? n)
+    (bit-shift-right n 1)
+    (inc (* n 3))))
 
-(defn count-terms [n]
-  (if (= 1 n) 1
-      (inc (count-terms (next-term n)))))
+(defn ^:static count-terms ^long [^long n]
+  (if (= 1 n)
+    1
+    (inc (count-terms (next-term n)))))
 
 (timed-test
  "Problem 14"
