@@ -1,12 +1,12 @@
 (ns p99
-  (:use [utils :only (split-commas parse-int timed-test)])
+  (:use [utils :only (split-commas timed-test)])
   (:use [clojure.java.io :only (reader)])
   (:use [clojure.contrib.generic.math-functions :only (log)]))
 
 (defn process-line [idx line]
   (let [[base-str exp-str] (split-commas line)
-	base (parse-int base-str)
-	exp (parse-int exp-str)
+	base (Integer/parseInt base-str)
+	exp (Integer/parseInt exp-str)
 	log-value (* exp (log base))]
     [log-value (inc idx)]))
 
