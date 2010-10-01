@@ -1,7 +1,7 @@
 (ns p92
   (:use [utils :only (sq timed-test)]))
 
-(defn ^:static next-num ^long [^long n]
+(defn ^:static next-num [n]
   (loop [n n
 	 acc 0]
     (let [digit (mod n 10)
