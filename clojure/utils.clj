@@ -33,7 +33,7 @@
 
 (defn ^:static re-matches? [re s] (.matches (re-matcher re s)))
 
-(defn ^:static divides? [dividend divisor] (zero? (rem dividend divisor)))
+(defn ^:static divides? [n a] (zero? (rem n a)))
 
 (defn ^:static sum [coll] (reduce +' coll))
 
@@ -51,7 +51,13 @@
 
 (defn ^:static strip-quotes [s] (str/replace s "\"" ""))
 
-(defn ^:static prime? [n] (= 2 (count (factors n))))
+(defn ^:static prime? [n]
+  (cond
+   (not (pos? n)) false
+   (= 1 n) false
+   (= 2 n) true
+   :else (let [two-to-sqrt (range 2 (inc (sqrt n)))]
+	   (not-any? #(divides? n %) two-to-sqrt))))
 
 (defn ^:static prime-factors [n] (filter prime? (factors n)))
 
