@@ -2,23 +2,27 @@
   (:use [clojure.contrib.generic.math-functions :only (sqrt)])
   (:require [clojure.string :as str]))
 
-(defn even? [n] (false? (bit-test n 0)))
+(defn ^:static even? [n] (false? (bit-test n 0)))
 
-(defn expt [base pow] (reduce *' (repeat pow base)))
+(defn ^:static expt [base pow] (reduce *' (repeat pow base)))
 
-(defn fibs [] (map first (iterate (fn [[a b]] [b (+' a b)]) [0 1])))
+(defn ^:static fibs []
+  (let [f (fn [[a b]] [b (+' a b)])]
+    (map first (iterate f [0 1]))))
 
-(defn max-key
+(defn ^:static max-key
   ([k x] x)
   ([k x & more]
      (loop [x x
             kx (k x)
             s more]
-       (if-not s x
-	       (let [y (first s)
-		     ky (k y)]
-		 (if (> kx ky) (recur x kx (next s))
-		     (recur y ky (next s))))))))
+       (if-not s
+	 x
+	 (let [y (first s)
+	       ky (k y)]
+	   (if (> kx ky)
+	     (recur x kx (next s))
+	     (recur y ky (next s))))))))
 
 (defmacro timed-test [name answer code]
   `(do
@@ -27,61 +31,63 @@
 	   status# (if (= my-answer# ~answer) "OK" "FAIL")]
        (println "[ " status# " ]"))))
 
-(defn re-matches? [re s] (.matches (re-matcher re s)))
+(defn ^:static re-matches? [re s] (.matches (re-matcher re s)))
 
-(defn divides? [dividend divisor] (zero? (rem dividend divisor)))
+(defn ^:static divides? [dividend divisor] (zero? (rem dividend divisor)))
 
-(defn sum [coll] (reduce +' coll))
+(defn ^:static sum [coll] (reduce +' coll))
 
-(defn product [coll] (reduce *' coll))
+(defn ^:static product [coll] (reduce *' coll))
 
-(defn factors [n]
+(defn ^:static factors [n]
   (let [one-to-sqrt (range 1 (inc (sqrt n)))
 	factor-pairs (for [i one-to-sqrt :when (divides? n i)]
 		       [i (/ n i)])]
     (set (apply concat factor-pairs))))
 
-(defn proper-divisors [n] (disj (factors n) n))
+(defn ^:static proper-divisors [n] (disj (factors n) n))
 
-(defn split-commas [s] (str/split s #","))
+(defn ^:static split-commas [s] (str/split s #","))
 
-(defn strip-quotes [s] (str/replace s "\"" ""))
+(defn ^:static strip-quotes [s] (str/replace s "\"" ""))
 
-(defn prime? [n] (= 2 (count (factors n))))
+(defn ^:static prime? [n] (= 2 (count (factors n))))
 
-(defn prime-factors [n] (filter prime? (factors n)))
+(defn ^:static prime-factors [n] (filter prime? (factors n)))
 
-(defn palindrome? [n]
+(defn ^:static palindrome? [n]
   (let [s (seq (str n))]
     (= s (reverse s))))
 
-(defn square [n] (* n n))
+(defn ^:static sq [n] (* n n))
 
-(defmulti parse-int class)
-(defmethod parse-int String [s] (Integer/parseInt s))
-(defmethod parse-int Character [c] (parse-int (str c)))
+(defn ^:static digits [n]
+  (loop [n n
+	 acc '()]
+    (let [new-acc (conj acc (mod n 10))]
+      (if (< n 10)
+	new-acc
+	(recur (quot n 10) new-acc)))))
 
-(defn digits [n] (map parse-int (str n)))
+(defn ^:static pythagorean? [[a b c]] (= (+ (sq a) (sq b)) (sq c)))
 
-(defn pythagorean? [[a b c]] (= (+ (square a) (square b)) (square c)))
+(defn ^:static m-get [m [row col]] (nth (nth m row nil) col nil))
 
-(defn m-get [m [row col]] (nth (nth m row nil) col nil))
+(defn ^:static factorial [n] (product (range 1 (inc n))))
 
-(defn factorial [n] (product (range 1 (inc n))))
+(defn ^:static falling-factorial [n k] (product (take k (iterate dec n))))
 
-(defn falling-factorial [n k] (product (take k (iterate dec n))))
+(defn ^:static n-choose-k [n k] (/ (falling-factorial n k) (factorial k)))
 
-(defn n-choose-k [n k] (/ (falling-factorial n k) (factorial k)))
+(defn ^:static whole-nums [] (iterate inc 1))
 
-(defn whole-nums [] (iterate inc 1))
+(defn ^:static natural-nums [] (iterate inc 0))
 
-(defn natural-nums [] (iterate inc 0))
+(defn ^:static triangle-nums [] (map #(n-choose-k (inc %) 2) (whole-nums)))
 
-(defn triangle-nums [] (map #(n-choose-k (inc %) 2) (whole-nums)))
+(defn ^:static has? [coll x] (some #{x} coll))
 
-(defn has? [coll x] (some #{x} coll))
-
-(defn expt-mod-n
+(defn ^:static expt-mod-n
   ([base pow n] (expt-mod-n base pow n 1))
   ([base pow n acc]
      (let [new-acc (rem (* base acc) n)]
@@ -90,6 +96,6 @@
 	(= 1 pow) new-acc
 	:else (recur base (dec pow) n new-acc)))))
 
-(defn quadratic [n a b] (+ (square n) (* a n) b))
+(defn ^:static quadratic [n a b] (+ (sq n) (* a n) b))
 
-(defn map-vals [f m] (zipmap (keys m) (map f (vals m))))
+(defn ^:static map-vals [f m] (zipmap (keys m) (map f (vals m))))
