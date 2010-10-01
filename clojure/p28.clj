@@ -1,9 +1,9 @@
 (ns p28
-  (:use [utils :only (square sum timed-test)]))
+  (:use [utils :only (sq sum timed-test)]))
 
 (defn get-corner-nums [n]
   (for [i (range 4)]
-    (- (square n) (* i (dec n)))))
+    (- (sq n) (* i (dec n)))))
 
 (timed-test
  "Problem 28"
