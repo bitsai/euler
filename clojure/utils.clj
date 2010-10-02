@@ -24,6 +24,20 @@
 	     (recur x kx (next s))
 	     (recur y ky (next s))))))))
 
+(defn ^:static min-key
+  ([k x] x)
+  ([k x & more]
+     (loop [x x
+            kx (k x)
+            s more]
+       (if-not s
+	 x
+	 (let [y (first s)
+	       ky (k y)]
+	   (if (< kx ky)
+	     (recur x kx (next s))
+	     (recur y ky (next s))))))))
+
 (defmacro timed-test [name answer code]
   `(do
      (println ~name)
