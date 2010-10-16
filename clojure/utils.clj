@@ -83,9 +83,15 @@
 (defn ^:static prime-factors [n]
   (filter prime? (factors n)))
 
-(defn ^:static palindrome? [n]
-  (let [s (seq (str n))]
-    (= s (reverse s))))
+(defn ^:static palindrome? [s]
+  (let [len (count s)
+        mid (quot len 2)]
+    (loop [i 0
+           j (dec len)]
+      (cond
+       (= i mid) true
+       (= (nth s i) (nth s j)) (recur (inc i) (dec j))
+       :else false))))
 
 (defn ^:static sq [n]
   (* n n))

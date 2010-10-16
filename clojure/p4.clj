@@ -6,6 +6,6 @@
  906609
  (let [pals (for [x (range 100 1000)
 		  y (range x 1000)
-		  :when (palindrome? (* x y))]
+		  :when (palindrome? (str (* x y)))]
 	      (* x y))]
    (apply max pals)))
