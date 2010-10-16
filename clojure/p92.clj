@@ -16,8 +16,9 @@
    (= 89 n) true
    :else (sad? (next-num n))))
 
-(def sad-table (let [nums (range 1 (inc 567))]
-		 (zipmap nums (map sad? nums))))
+(def sad-table (let [nums (range 1 (inc 567))
+		     sadness (map sad? nums)]
+		 (zipmap nums sadness)))
 
 (timed-test
  "Problem 92"
