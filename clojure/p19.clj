@@ -1,5 +1,5 @@
 (ns p19
-  (:use [utils :only (timed-test)])
+  (:use [utils :only (count-if timed-test)])
   (:import [java.util GregorianCalendar]))
 
 (defn inc-date [d]
@@ -21,4 +21,4 @@
  (let [start (GregorianCalendar. 1901 0 1)
        end (GregorianCalendar. 2001 0 1)
        dates (take-while #(not= end %) (iterate inc-date start))]
-   (count (filter sunday-on-first? dates))))
+   (count-if sunday-on-first? dates)))

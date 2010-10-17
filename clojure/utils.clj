@@ -40,6 +40,9 @@
 	     (recur x kx (next s))
 	     (recur y ky (next s))))))))
 
+(defn ^:static count-if [pred coll]
+  (count (filter pred coll)))
+
 (defmacro timed-test [name answer code]
   `(do
      (println ~name)

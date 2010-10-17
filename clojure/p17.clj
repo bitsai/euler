@@ -1,5 +1,5 @@
 (ns p17
-  (:use [utils :only (digits sum timed-test)]))
+  (:use [utils :only (digits count-if sum timed-test)]))
 
 (def ones {1 " one "
 	   2 " two "
@@ -59,7 +59,7 @@
 
 (defn count-letters [n]
   (let [not-space? (complement #{\space})]
-    (count (filter not-space? (num-to-words n)))))
+    (count-if not-space? (num-to-words n))))
 
 (timed-test
  "Problem 17"
