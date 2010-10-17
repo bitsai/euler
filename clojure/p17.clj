@@ -41,8 +41,9 @@
       (str word suffix))))
 
 (defn digits-to-words [ten one]
-  (if (= ten 1) (teens one)
-      (str (tens ten) (ones one))))
+  (if (= ten 1)
+    (teens one)
+    (str (tens ten) (ones one))))
 
 (defn add-and [thousand hundred ten one]
   (if (and (or (not-zero? thousand) (not-zero? hundred))

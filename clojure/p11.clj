@@ -36,8 +36,9 @@
 (defn group-product [group]
   (let [get-num #(m-get m %)
 	nums (map get-num group)]
-    (if (some nil? nums) 0
-	(product nums))))
+    (if (some nil? nums)
+      0
+      (product nums))))
 
 (timed-test
  "Problem 11"

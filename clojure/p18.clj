@@ -19,9 +19,10 @@
 
 (defn max-total [row col]
   (let [n (m-get triangle [row col])]
-    (if (nil? n) 0
-	(+ n (max (max-total (dec row) col)
-		  (max-total (dec row) (dec col)))))))
+    (if (nil? n)
+      0
+      (+ n (max (max-total (dec row) col)
+		(max-total (dec row) (dec col)))))))
 
 (timed-test
  "Problem 18"

@@ -7,8 +7,9 @@
     (let [digit (unchecked-remainder-int n (int 10))
 	  square (unchecked-multiply-int digit digit)
 	  new-acc (unchecked-add-int acc square)]
-      (if (< n (int 10)) new-acc
-	  (recur (unchecked-divide-int n 10) new-acc)))))
+      (if (< n (int 10))
+	new-acc
+	(recur (unchecked-divide-int n 10) new-acc)))))
 
 (defn sad? [n]
   (cond
