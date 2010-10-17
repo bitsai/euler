@@ -40,9 +40,6 @@
 	     (recur x kx (next s))
 	     (recur y ky (next s))))))))
 
-(defn ^:static count-if [pred coll]
-  (count (filter pred coll)))
-
 (defmacro timed-test [name answer code]
   `(do
      (println ~name)
@@ -61,6 +58,12 @@
 
 (defn ^:static product [coll]
   (reduce *' coll))
+
+(defn ^:static count-if [pred coll]
+  (count (filter pred coll)))
+
+(defn ^:static sum-if [pred coll]
+  (sum (filter pred coll)))
 
 (defn ^:static factors [n]
   (let [one-to-sqrt (take-while #(<= % (sqrt n)) (iterate inc 1))

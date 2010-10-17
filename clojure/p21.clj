@@ -1,5 +1,5 @@
 (ns p21
-  (:use [utils :only (proper-divisors sum timed-test)]))
+  (:use [utils :only (proper-divisors sum sum-if timed-test)]))
 
 (defn amicable? [a]
   (let [d #(sum (proper-divisors %))
@@ -10,4 +10,4 @@
 (timed-test
  "Problem 21"
  31626
- (sum (filter amicable? (range 220 10000))))
+ (sum-if amicable? (range 220 10000)))
