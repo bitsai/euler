@@ -1,17 +1,17 @@
 (ns p14
-  (:use [utils :only (even? max-key timed-test)]))
+  (:use [utils :only (max-key timed-test)]))
 
 ;; Tell Nick about jvm server mode
 
 (defn ^:static next-term ^long [^long n]
-  (if (even? n)
-    (bit-shift-right n 1)
-    (inc (* n 3))))
+  (if (zero? (unchecked-remainder-long n 2))
+    (unchecked-divide-long n 2)
+    (unchecked-inc-long (unchecked-multiply-long n 3))))
 
 (defn ^:static count-terms ^long [^long n]
-  (if (= 1 n)
+  (if (= n 1)
     1
-    (inc (count-terms (next-term n)))))
+    (unchecked-inc-long (count-terms (next-term n)))))
 
 (timed-test
  "Problem 14"
