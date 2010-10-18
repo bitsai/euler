@@ -9,7 +9,7 @@
     (unchecked-inc-long (unchecked-multiply-long n 3))))
 
 (defn ^:static count-terms ^long [^long n]
-  (if (= n 1)
+  (if (== n 1)
     1
     (unchecked-inc-long (count-terms (next-term n)))))
 
