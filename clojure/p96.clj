@@ -1,7 +1,7 @@
 (ns p96
   (:use [clojure.java.io :only (reader)])
   (:use [clojure.string :only (join split-lines)])
-  (:use [utils :only (re-matches? sum timed-test)]))
+  (:use [utils :only (sum timed-test)]))
 
 (defn cross [A B]
   (for [a A, b B] (str a b)))
@@ -105,7 +105,7 @@
  "Problem 96"
  24702
  (with-open [rdr (reader "../data/sudoku.txt")]
-   (let [grid-lines (filter #(re-matches? #"^\d+$" %) (line-seq rdr))
+   (let [grid-lines (filter #(re-matches #"^\d+$" %) (line-seq rdr))
 	 grids (map #(apply concat %) (partition 9 grid-lines))
 	 solutions (map solve grids)]
      (sum (map top-left-num solutions)))))

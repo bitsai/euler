@@ -47,9 +47,6 @@
 	   status# (if (= my-answer# ~answer) "OK" "FAIL")]
        (println "[ " status# " ]"))))
 
-(defn ^:static re-matches? [re s]
-  (.matches (re-matcher re s)))
-
 (defn ^:static divides? [n a]
   (zero? (rem n a)))
 
