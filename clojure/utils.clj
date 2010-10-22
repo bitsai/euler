@@ -1,5 +1,5 @@
 (ns utils
-  (:use [clojure.contrib.generic.math-functions :only (sqrt)])
+  (:use [clojure.contrib.generic.math-functions :only (round sqrt)])
   (:require [clojure.string :as str]))
 
 (defn ^:static even? [n]
@@ -63,13 +63,16 @@
   (sum (filter pred coll)))
 
 (defn ^:static factors [n]
-  (let [one-to-sqrt (take-while #(<= % (sqrt n)) (iterate inc 1))
-	factor-pairs (for [i one-to-sqrt :when (divides? n i)]
-		       [i (/ n i)])]
-    (set (apply concat factor-pairs))))
+  (let [root (sqrt n)
+	int-root (round root)
+	pairs (for [i (range 1 root) :when (divides? n i)] [i (/ n i)])
+	factors (apply concat pairs)]
+    (if (== root int-root)
+      (conj factors int-root)
+      factors)))
 
 (defn ^:static proper-divisors [n]
-  (disj (factors n) n))
+  (remove #{n} (factors n)))
 
 (defn ^:static split-commas [s]
   (str/split s #","))
@@ -78,10 +81,11 @@
   (str/replace s "\"" ""))
 
 (defn ^:static prime? [n]
-  (cond
-   (< n 2) false
-   :else (let [two-to-sqrt (take-while #(<= % (sqrt n)) (iterate inc 2))]
-	   (not-any? #(divides? n %) two-to-sqrt))))
+  (if (< n 2)
+    false
+    (let [root (sqrt n)
+	  two-to-sqrt (conj (range 2 root) root)]
+      (not-any? #(divides? n %) two-to-sqrt))))
 
 (defn ^:static prime-factors [n]
   (filter prime? (factors n)))
