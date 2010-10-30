@@ -8,7 +8,7 @@
 	numerator (- (+ (sqrt (+ a b)) s) 4)
 	denominator (- (* 2 s) 4)
 	n (/ numerator denominator)]
-    (== n (round n))))
+    (= n (round n))))
 
 (timed-test
  "Problem 45"

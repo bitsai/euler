@@ -3,15 +3,15 @@
 
 ;; Tell Nick about jvm server mode
 
-(defn ^:static next-term ^long [^long n]
-  (if (zero? (unchecked-remainder-long n 2))
-    (unchecked-divide-long n 2)
-    (unchecked-inc-long (unchecked-multiply-long n 3))))
+(defn next-term [n]
+  (if (even? n)
+    (/ n 2)
+    (inc (* n 3))))
 
-(defn ^:static count-terms ^long [^long n]
-  (if (== n 1)
+(defn count-terms [n]
+  (if (= n 1)
     1
-    (unchecked-inc-long (count-terms (next-term n)))))
+    (inc (count-terms (next-term n)))))
 
 (timed-test
  "Problem 14"

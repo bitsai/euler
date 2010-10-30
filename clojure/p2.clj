@@ -1,5 +1,5 @@
 (ns p2
-  (:use [utils :only (fibs even? sum-if timed-test)]))
+  (:use [utils :only (fibs sum-if timed-test)]))
 
 (timed-test
  "Problem 2"

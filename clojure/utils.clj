@@ -2,17 +2,14 @@
   (:use [clojure.contrib.generic.math-functions :only (round sqrt)])
   (:require [clojure.string :as str]))
 
-(defn ^:static even? [n]
-  (false? (bit-test n 0)))
+(defn expt [base pow]
+  (reduce * (repeat pow base)))
 
-(defn ^:static expt [base pow]
-  (reduce *' (repeat pow base)))
-
-(defn ^:static fibs []
-  (let [f (fn [[a b]] [b (+' a b)])]
+(defn fibs []
+  (let [f (fn [[a b]] [b (+ a b)])]
     (map first (iterate f [0 1]))))
 
-(defn ^:static max-key
+(defn max-key
   ([k x] x)
   ([k x & more]
      (loop [x x
@@ -26,7 +23,7 @@
 	     (recur x kx (next s))
 	     (recur y ky (next s))))))))
 
-(defn ^:static min-key
+(defn min-key
   ([k x] x)
   ([k x & more]
      (loop [x x
@@ -47,50 +44,50 @@
 	   status# (if (= my-answer# ~answer) "OK" "FAIL")]
        (println "[ " status# " ]"))))
 
-(defn ^:static divides? [n a]
+(defn divides? [n a]
   (zero? (rem n a)))
 
-(defn ^:static sum [coll]
-  (reduce +' coll))
+(defn sum [coll]
+  (reduce + coll))
 
-(defn ^:static product [coll]
-  (reduce *' coll))
+(defn product [coll]
+  (reduce * coll))
 
-(defn ^:static count-if [pred coll]
+(defn count-if [pred coll]
   (count (filter pred coll)))
 
-(defn ^:static sum-if [pred coll]
+(defn sum-if [pred coll]
   (sum (filter pred coll)))
 
-(defn ^:static factors [n]
+(defn factors [n]
   (let [root (sqrt n)
 	int-root (round root)
 	pairs (for [i (range 1 root) :when (divides? n i)] [i (/ n i)])
 	factors (apply concat pairs)]
-    (if (== root int-root)
+    (if (= root int-root)
       (conj factors int-root)
       factors)))
 
-(defn ^:static proper-divisors [n]
+(defn proper-divisors [n]
   (remove #{n} (factors n)))
 
-(defn ^:static split-commas [s]
+(defn split-commas [s]
   (str/split s #","))
 
-(defn ^:static strip-quotes [s]
+(defn strip-quotes [s]
   (str/replace s "\"" ""))
 
-(defn ^:static prime? [n]
+(defn prime? [n]
   (if (< n 2)
     false
     (let [root (sqrt n)
 	  two-to-sqrt (conj (range 2 root) root)]
       (not-any? #(divides? n %) two-to-sqrt))))
 
-(defn ^:static prime-factors [n]
+(defn prime-factors [n]
   (filter prime? (factors n)))
 
-(defn ^:static palindrome? [s]
+(defn palindrome? [s]
   (let [len (count s)
         mid (quot len 2)]
     (loop [i 0
@@ -100,45 +97,46 @@
        (= (nth s i) (nth s j)) (recur (inc i) (dec j))
        :else false))))
 
-(defn ^:static sq [n]
+(defn sq [n]
   (* n n))
 
-(defn ^:static digits [n]
+(defn digits [n]
   (loop [n n
 	 acc '()]
-    (let [new-acc (conj acc (mod n 10))]
+    (let [digit (rem n 10)
+	  new-acc (conj acc digit)]
       (if (< n 10)
 	new-acc
 	(recur (quot n 10) new-acc)))))
 
-(defn ^:static pythagorean? [[a b c]]
+(defn pythagorean? [[a b c]]
   (= (+ (sq a) (sq b)) (sq c)))
 
-(defn ^:static m-get [m [row col]]
+(defn m-get [m [row col]]
   (nth (nth m row nil) col nil))
 
-(defn ^:static factorial [n]
+(defn factorial [n]
   (product (range 1 (inc n))))
 
-(defn ^:static falling-factorial [n k]
+(defn falling-factorial [n k]
   (product (take k (iterate dec n))))
 
-(defn ^:static n-choose-k [n k]
+(defn n-choose-k [n k]
   (/ (falling-factorial n k) (factorial k)))
 
-(defn ^:static whole-nums []
+(defn whole-nums []
   (iterate inc 1))
 
-(defn ^:static natural-nums []
+(defn natural-nums []
   (iterate inc 0))
 
-(defn ^:static triangle-nums []
+(defn triangle-nums []
   (map #(n-choose-k (inc %) 2) (whole-nums)))
 
-(defn ^:static has? [coll x]
+(defn has? [coll x]
   (some #{x} coll))
 
-(defn ^:static expt-mod-n
+(defn expt-mod-n
   ([base pow n] (expt-mod-n base pow n 1))
   ([base pow n acc]
      (let [new-acc (rem (* base acc) n)]
@@ -147,8 +145,8 @@
 	(= 1 pow) new-acc
 	:else (recur base (dec pow) n new-acc)))))
 
-(defn ^:static quadratic [n a b]
+(defn quadratic [n a b]
   (+ (sq n) (* a n) b))
 
-(defn ^:static map-vals [f m]
+(defn map-vals [f m]
   (zipmap (keys m) (map f (vals m))))

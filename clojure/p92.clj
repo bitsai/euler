@@ -1,15 +1,14 @@
 (ns p92
-  (:use [utils :only (count-if timed-test)]))
+  (:use [utils :only (sq count-if timed-test)]))
 
-(defn ^:static next-num [n]
-  (loop [n (int n)
-	 acc (int 0)]
-    (let [digit (unchecked-remainder-int n (int 10))
-	  square (unchecked-multiply-int digit digit)
-	  new-acc (unchecked-add-int acc square)]
-      (if (< n (int 10))
+(defn next-num [n]
+  (loop [n n
+	 acc 0]
+    (let [digit (rem n 10)
+	  new-acc (+ acc (sq digit))]
+      (if (< n 10)
 	new-acc
-	(recur (unchecked-divide-int n 10) new-acc)))))
+	(recur (quot n 10) new-acc)))))
 
 (defn sad? [n]
   (cond
