@@ -150,3 +150,15 @@
 
 (defn map-vals [f m]
   (zipmap (keys m) (map f (vals m))))
+
+(defn word-score [word]
+  (let [char-score #(- (int %) 64)]
+    (sum (map char-score word))))
+
+(defn s-gonal? [x s]
+  (let [a (* (- (* 8 s) 16) x)
+	b (sq (- s 4))
+	numerator (- (+ (sqrt (+ a b)) s) 4)
+	denominator (- (* 2 s) 4)
+	n (/ numerator denominator)]
+    (= n (round n))))

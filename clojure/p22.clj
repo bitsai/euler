@@ -1,11 +1,9 @@
 (ns p22
-  (:use [utils :only (sum strip-quotes split-commas timed-test)])
+  (:use [utils :only (word-score strip-quotes split-commas sum timed-test)])
   (:use [clojure.java.io :only (reader)]))
 
 (defn name-score [idx name]
-  (let [char-score #(- (int %) 64)
-	word-score #(sum (map char-score %))]
-    (* (inc idx) (word-score name))))
+  (* (inc idx) (word-score name)))
 
 (timed-test
  "Problem 22"
