@@ -1,19 +1,23 @@
 (ns p14
   (:use [utils :only (max-key timed-test)]))
 
-;; Tell Nick about jvm server mode
-
-(defn next-term [n]
-  (if (even? n)
-    (/ n 2)
-    (inc (* n 3))))
-
 (defn count-terms [n]
-  (if (= n 1)
-    1
-    (inc (count-terms (next-term n)))))
+  (loop [n (long n)
+	 count (long 1)]
+    (if (= n (long 1))
+      count
+      (recur
+       (if (bit-test n 0)
+	 (unchecked-inc (unchecked-multiply n (long 3)))
+	 (unchecked-divide n (long 2)))
+       (unchecked-inc count)))))
 
 (timed-test
  "Problem 14"
  837799
- (apply max-key count-terms (range 1 1000000)))
+ (let [f #(apply max-key count-terms %)
+       input [(range 1 250000)
+	      (range 250000 500000)
+	      (range 500000 750000)
+	      (range 750000 1000000)]]
+   (reduce max (pmap f input))))

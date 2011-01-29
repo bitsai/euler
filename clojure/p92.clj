@@ -1,14 +1,14 @@
 (ns p92
-  (:use [utils :only (sq count-if timed-test)]))
+  (:use [utils :only (count-if timed-test)]))
 
 (defn next-num [n]
-  (loop [n n
-	 acc 0]
-    (let [digit (rem n 10)
-	  new-acc (+ acc (sq digit))]
-      (if (< n 10)
+  (loop [n (int n)
+	 acc (int 0)]
+    (let [digit (unchecked-remainder n (int 10))
+	  new-acc (unchecked-add acc (unchecked-multiply digit digit))]
+      (if (< n (int 10))
 	new-acc
-	(recur (quot n 10) new-acc)))))
+	(recur (unchecked-divide n (int 10)) new-acc)))))
 
 (defn sad? [n]
   (cond
@@ -26,4 +26,9 @@
 (timed-test
  "Problem 92"
  8581146
- (count-if sad? (range 1 10000000)))
+ (let [f #(count-if sad? %)
+       input [(range 1 2500000)
+	      (range 2500000 5000000)
+	      (range 5000000 7500000)
+	      (range 7500000 10000000)]]
+   (reduce + (pmap f input))))
