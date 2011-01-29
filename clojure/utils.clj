@@ -1,5 +1,5 @@
 (ns utils
-  (:use [clojure.contrib.generic.math-functions :only (round sqrt)])
+  (:use [clojure.contrib.generic.math-functions :only (round sqr sqrt)])
   (:require [clojure.string :as str]))
 
 (defn expt [base pow]
@@ -44,8 +44,8 @@
 	   status# (if (= my-answer# ~answer) "OK" "FAIL")]
        (println "[ " status# " ]"))))
 
-(defn divides? [n a]
-  (zero? (rem n a)))
+(defn multiple? [m n]
+  (zero? (rem m n)))
 
 (defn sum [coll]
   (reduce + coll))
@@ -62,7 +62,7 @@
 (defn factors [n]
   (let [root (sqrt n)
 	int-root (round root)
-	pairs (for [i (range 1 root) :when (divides? n i)] [i (/ n i)])
+	pairs (for [i (range 1 root) :when (multiple? n i)] [i (/ n i)])
 	factors (apply concat pairs)]
     (if (= root int-root)
       (conj factors int-root)
@@ -82,7 +82,7 @@
     false
     (let [root (sqrt n)
 	  two-to-sqrt (conj (range 2 root) root)]
-      (not-any? #(divides? n %) two-to-sqrt))))
+      (not-any? #(multiple? n %) two-to-sqrt))))
 
 (defn prime-factors [n]
   (filter prime? (factors n)))
@@ -97,9 +97,6 @@
        (= (nth s i) (nth s j)) (recur (inc i) (dec j))
        :else false))))
 
-(defn sq [n]
-  (* n n))
-
 (defn digits [n]
   (loop [n n
 	 acc '()]
@@ -110,7 +107,7 @@
 	(recur (quot n 10) new-acc)))))
 
 (defn pythagorean? [[a b c]]
-  (= (+ (sq a) (sq b)) (sq c)))
+  (= (+ (sqr a) (sqr b)) (sqr c)))
 
 (defn m-get [m [row col]]
   (nth (nth m row nil) col nil))
@@ -146,7 +143,7 @@
 	:else (recur base (dec pow) n new-acc)))))
 
 (defn quadratic [n a b]
-  (+ (sq n) (* a n) b))
+  (+ (sqr n) (* a n) b))
 
 (defn map-vals [f m]
   (zipmap (keys m) (map f (vals m))))
@@ -157,7 +154,7 @@
 
 (defn s-gonal? [x s]
   (let [a (* (- (* 8 s) 16) x)
-	b (sq (- s 4))
+	b (sqr (- s 4))
 	numerator (- (+ (sqrt (+ a b)) s) 4)
 	denominator (- (* 2 s) 4)
 	n (/ numerator denominator)]

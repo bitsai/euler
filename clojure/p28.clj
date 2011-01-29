@@ -1,9 +1,10 @@
 (ns p28
-  (:use [utils :only (sq sum timed-test)]))
+  (:use [utils :only (sum timed-test)])
+  (:use [clojure.contrib.generic.math-functions :only (sqr)]))
 
 (defn get-corner-nums [n]
   (for [i (range 4)]
-    (- (sq n) (* i (dec n)))))
+    (- (sqr n) (* i (dec n)))))
 
 (timed-test
  "Problem 28"
