@@ -99,12 +99,11 @@
 
 (defn digits [n]
   (loop [n n
-	 acc '()]
-    (let [digit (rem n 10)
-	  new-acc (conj acc digit)]
-      (if (< n 10)
-	new-acc
-	(recur (quot n 10) new-acc)))))
+	 digits-so-far '()]
+    (if (< n 10)
+      (conj digits-so-far n)
+      (recur (quot n 10)
+	     (conj digits-so-far (rem n 10))))))
 
 (defn pythagorean? [[a b c]]
   (= (+ (sqr a) (sqr b)) (sqr c)))
