@@ -1,4 +1,4 @@
-(ns p42
+(ns p40
   (:use [utils :only (digits timed-test)]))
 
 (defn fraction-digits []
