@@ -78,10 +78,9 @@
   (str/replace s "\"" ""))
 
 (defn prime? [n]
-  (if (< n 2)
-    false
+  (if (>= n 2)
     (let [root (sqrt n)
-	  two-to-sqrt (conj (range 2 root) root)]
+	  two-to-sqrt (conj (range 3 (inc root) 2) 2)]
       (not-any? #(multiple? n %) two-to-sqrt))))
 
 (defn prime-factors [n]
