@@ -3,13 +3,13 @@
   (:use [clojure.contrib.generic.math-functions :only (sqr sqrt)]))
 
 (defn sieve [n]
-  (loop [[p & _ :as nums] (cons 2 (range 3 (inc n) 2))
-	 primes []]
-    (cond
-     (< n 2) []
-     (> (sqr p) n) (concat primes nums)
-     :else (recur (remove #(multiple? % p) nums)
-		  (conj primes p)))))
+  (if (>= n 2)
+    (loop [[x & _ :as xs] (cons 2 (range 3 (inc n) 2))
+	   primes []]
+      (cond
+       (> (sqr x) n) (concat primes xs)
+       :else (recur (remove #(multiple? % x) xs)
+		    (conj primes x))))))
 
 (timed-test
  "Problem 10"
