@@ -1,5 +1,5 @@
 (ns p18
-  (:use [utils :only (m-get timed-test)]))
+  (:use [utils :only (timed-test)]))
 
 (def triangle [[75]
 	       [95 64]
@@ -17,17 +17,18 @@
 	       [63 66  4 68 89 53 67 30 73 16 69 87 40 31]
 	       [ 4 62 98 27 23  9 70 98 73 93 38 53 60  4 23]])
 
-(defn max-total [row col]
-  (let [n (m-get triangle [row col])]
-    (if (nil? n)
-      0
-      (+ n (max (max-total (dec row) col)
-		(max-total (dec row) (dec col)))))))
+(defn get-totals [input last-totals]
+  (for [i (range (count input))]
+    (+ (nth input i) (max (nth last-totals i 0)
+			  (nth last-totals (dec i) 0)))))
+
+(defn max-total [[input & next-inputs] [last-totals & _ :as all-totals]] 
+  (if-not input
+    (apply max last-totals)
+    (let [new-totals (get-totals input last-totals)]
+      (recur next-inputs (cons new-totals all-totals)))))
 
 (timed-test
  "Problem 18"
  1074
- (let [last-row (dec (count triangle))
-       last-cols (range (count (triangle last-row)))
-       max-totals (for [col last-cols] (max-total last-row col))]
-   (apply max max-totals)))
+ (max-total triangle '()))
