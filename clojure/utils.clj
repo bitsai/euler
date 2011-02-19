@@ -9,34 +9,6 @@
   (let [f (fn [[a b]] [b (+ a b)])]
     (map first (iterate f [0 1]))))
 
-(defn max-key
-  ([k x] x)
-  ([k x & more]
-     (loop [x x
-            kx (k x)
-            s more]
-       (if-not s
-	 x
-	 (let [y (first s)
-	       ky (k y)]
-	   (if (> kx ky)
-	     (recur x kx (next s))
-	     (recur y ky (next s))))))))
-
-(defn min-key
-  ([k x] x)
-  ([k x & more]
-     (loop [x x
-            kx (k x)
-            s more]
-       (if-not s
-	 x
-	 (let [y (first s)
-	       ky (k y)]
-	   (if (< kx ky)
-	     (recur x kx (next s))
-	     (recur y ky (next s))))))))
-
 (defmacro timed-test [name answer code]
   `(do
      (println ~name)
@@ -107,9 +79,6 @@
 (defn pythagorean? [[a b c]]
   (= (+ (sqr a) (sqr b)) (sqr c)))
 
-(defn m-get [m [row col]]
-  (nth (nth m row nil) col nil))
-
 (defn factorial [n]
   (product (range 1 (inc n))))
 
@@ -119,17 +88,8 @@
 (defn n-choose-k [n k]
   (/ (falling-factorial n k) (factorial k)))
 
-(defn whole-nums []
-  (iterate inc 1))
-
-(defn natural-nums []
-  (iterate inc 0))
-
 (defn triangle-nums []
-  (map #(n-choose-k (inc %) 2) (whole-nums)))
-
-(defn has? [coll x]
-  (some #{x} coll))
+  (map #(n-choose-k (inc %) 2) (next (range))))
 
 (defn expt-mod-n
   ([base pow n] (expt-mod-n base pow n 1))

@@ -1,5 +1,5 @@
 (ns p12
-  (:use [utils :only (factors triangle-nums whole-nums timed-test)]))
+  (:use [utils :only (factors triangle-nums timed-test)]))
 
 (defn count-triangle-num-factors [n]
   (let [D #(count (factors %))]
@@ -13,5 +13,5 @@
 (timed-test
  "Problem 12"
  76576500
- (let [pairs (map vector (triangle-nums) (whole-nums))]
+ (let [pairs (map vector (triangle-nums) (next (range)))]
    (ffirst (drop-while lte-500-factors? pairs))))

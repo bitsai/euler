@@ -89,8 +89,8 @@
   (cond
    (false? values) false
    (all? (for [s squares] (= 1 (count (@values s))))) values
-   :else (let [unfilled-squares (filter #(< 1 (count (@values %))) squares)
-	       s (apply min-key #(count (@values %)) unfilled-squares)]
+   :else (let [unfilled (filter #(< 1 (count (@values %))) squares)
+	       s (apply min-key #(count (@values %)) unfilled)]
 	   (some #(search (assign (copy values) s %)) (@values s)))))
 
 (defn solve [grid]

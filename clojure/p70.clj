@@ -1,5 +1,5 @@
 (ns p70
-  (:use [utils :only (min-key timed-test)])
+  (:use [utils :only (timed-test)])
   (:use [clojure.contrib.lazy-seqs :only (primes)]))
 
 (defn n [[p1 p2]]

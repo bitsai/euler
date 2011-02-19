@@ -1,9 +1,9 @@
 (ns p27
-  (:use [utils :only (natural-nums quadratic prime? timed-test)])
+  (:use [utils :only (quadratic prime? timed-test)])
   (:use [clojure.contrib.lazy-seqs :only (primes)]))
 
 (defn consecutive-primes [a b]
-  (take-while #(prime? (quadratic % a b)) (natural-nums)))
+  (take-while #(prime? (quadratic % a b)) (range)))
 
 (timed-test
  "Problem 27"
