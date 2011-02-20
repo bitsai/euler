@@ -1,5 +1,5 @@
 (ns p13
-  (:use [utils :only (sum digits timed-test)]))
+  (:use [utils :only (sum timed-test)]))
 
 (def big-nums [37107287533902102798797998220837590246510135740250
 	       46376937677490009712648124896970078050417018260538
@@ -105,4 +105,4 @@
 (timed-test
  "Problem 13"
  "5537376230"
- (apply str (take 10 (digits (sum big-nums)))))
+ (subs (str (sum big-nums)) 0 10))
