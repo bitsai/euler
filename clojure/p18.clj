@@ -17,18 +17,18 @@
 	       [63 66  4 68 89 53 67 30 73 16 69 87 40 31]
 	       [ 4 62 98 27 23  9 70 98 73 93 38 53 60  4 23]])
 
-(defn get-totals [input last-totals]
-  (for [i (range (count input))]
-    (+ (nth input i) (max (nth last-totals i 0)
-			  (nth last-totals (dec i) 0)))))
+(defn row-totals [row last-totals]
+  (for [i (range (count row))]
+    (+ (nth row i) (max (nth last-totals i 0)
+			(nth last-totals (dec i) 0)))))
 
-(defn max-total [[input & next-inputs] [last-totals & _ :as all-totals]] 
-  (if-not input
-    (apply max last-totals)
-    (let [new-totals (get-totals input last-totals)]
-      (recur next-inputs (cons new-totals all-totals)))))
+(defn triangle-totals [[row & next-rows] totals]
+  (if-not row
+    totals
+    (let [new-totals (row-totals row (last totals))]
+      (recur next-rows (conj totals new-totals)))))
 
 (timed-test
  "Problem 18"
  1074
- (max-total triangle '()))
+ (apply max (last (triangle-totals triangle []))))
