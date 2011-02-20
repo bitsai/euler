@@ -1,19 +1,12 @@
 (ns utils
-  (:use [clojure.contrib.generic.math-functions :only (round sqr sqrt)])
+  (:use [clojure.contrib.generic.math-functions :only (sqr sqrt)])
   (:require [clojure.string :as str]))
-
-(defn expt [base pow]
-  (reduce * (repeat pow base)))
-
-(defn fibs []
-  (let [f (fn [[a b]] [b (+ a b)])]
-    (map first (iterate f [0 1]))))
 
 (defmacro timed-test [name answer code]
   `(do
      (println ~name)
-     (let [my-answer# (time ~code)
-	   status# (if (= my-answer# ~answer) "OK" "FAIL")]
+     (let [result# (time ~code)
+	   status# (if (= result# ~answer) "OK" "FAIL")]
        (println "[ " status# " ]"))))
 
 (defn multiple? [m n]
@@ -25,6 +18,13 @@
 (defn product [coll]
   (reduce * coll))
 
+(defn expt [base pow]
+  (product (repeat pow base)))
+
+(defn fibs []
+  (let [f (fn [[a b]] [b (+ a b)])]
+    (map first (iterate f [0 1]))))
+
 (defn count-if [pred coll]
   (count (filter pred coll)))
 
@@ -33,11 +33,11 @@
 
 (defn factors [n]
   (let [root (sqrt n)
-	int-root (round root)
+	int-root (int root)
 	pairs (for [i (range 1 root) :when (multiple? n i)] [i (/ n i)])
 	factors (apply concat pairs)]
     (if (= root int-root)
-      (conj factors int-root)
+      (cons int-root factors)
       factors)))
 
 (defn proper-divisors [n]
@@ -52,29 +52,31 @@
 (defn prime? [n]
   (if (>= n 2)
     (let [root (sqrt n)
-	  two-to-sqrt (conj (range 3 (inc root) 2) 2)]
-      (not-any? #(multiple? n %) two-to-sqrt))))
+	  xs (cons 2 (range 3 (inc root) 2))]
+      (not-any? #(multiple? n %) xs))))
 
 (defn prime-factors [n]
   (filter prime? (factors n)))
 
-(defn palindrome? [s]
-  (let [len (count s)
-        mid (quot len 2)]
-    (loop [i 0
-           j (dec len)]
+(defn prime-sieve [n]
+  (if (>= n 2)
+    (loop [[x & _ :as xs] (cons 2 (range 3 (inc n) 2))
+	   primes []]
       (cond
-       (= i mid) true
-       (= (nth s i) (nth s j)) (recur (inc i) (dec j))
-       :else false))))
+       (> (sqr x) n) (concat primes xs)
+       :else (recur (remove #(multiple? % x) xs)
+		    (conj primes x))))))
+
+(defn palindrome? [s]
+  (= (seq s) (reverse s)))
 
 (defn digits [n]
   (loop [n n
 	 digits-so-far '()]
     (if (< n 10)
-      (conj digits-so-far n)
+      (cons n digits-so-far)
       (recur (quot n 10)
-	     (conj digits-so-far (rem n 10))))))
+	     (cons (rem n 10) digits-so-far)))))
 
 (defn pythagorean? [[a b c]]
   (= (+ (sqr a) (sqr b)) (sqr c)))
@@ -116,4 +118,4 @@
 	numerator (- (+ (sqrt (+ a b)) s) 4)
 	denominator (- (* 2 s) 4)
 	n (/ numerator denominator)]
-    (= n (round n))))
+    (= n (int n))))

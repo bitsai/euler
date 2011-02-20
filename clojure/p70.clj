@@ -1,6 +1,5 @@
 (ns p70
-  (:use [utils :only (timed-test)])
-  (:use [clojure.contrib.lazy-seqs :only (primes)]))
+  (:use [utils :only (prime-sieve timed-test)]))
 
 (defn n [[p1 p2]]
   (* p1 p2))
@@ -21,9 +20,9 @@
 (timed-test
  "Problem 70"
  8319823
- (let [my-primes (take-while #(< % 5000) primes)
-       pairs (for [p1 my-primes
-		   p2 my-primes
+ (let [primes (prime-sieve 5000)
+       pairs (for [p1 primes
+		   p2 primes
 		   :when (< (* p1 p2) 10000000)]
 	       [p1 p2])
        permutation-pairs (filter phi-is-permutation-of-n? pairs)]
