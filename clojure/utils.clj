@@ -35,7 +35,7 @@
   (let [root (sqrt n)
 	int-root (int root)
 	pairs (for [i (range 1 root) :when (multiple? n i)] [i (/ n i)])
-	factors (apply concat pairs)]
+	factors (reduce into [] pairs)]
     (if (= root int-root)
       (cons int-root factors)
       factors)))
@@ -63,7 +63,7 @@
     (loop [[x & _ :as xs] (cons 2 (range 3 (inc n) 2))
 	   primes []]
       (cond
-       (> (sqr x) n) (concat primes xs)
+       (> (sqr x) n) (into primes xs)
        :else (recur (remove #(multiple? % x) xs)
 		    (conj primes x))))))
 
