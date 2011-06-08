@@ -1,5 +1,5 @@
 (ns p7
-  (:use [utils :only (timed-test)])
+  (:use [euler :only (timed-test)])
   (:use [clojure.contrib.lazy-seqs :only (primes)]))
 
 (timed-test

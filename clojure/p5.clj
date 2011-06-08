@@ -1,5 +1,5 @@
 (ns p5
-  (:use [utils :only (timed-test)])
+  (:use [euler :only (timed-test)])
   (:use [clojure.contrib.math :only (lcm)]))
 
 (timed-test
