@@ -91,7 +91,7 @@
   (/ (falling-factorial n k) (factorial k)))
 
 (defn triangle-nums []
-  (map #(n-choose-k (inc %) 2) (next (range))))
+  (reductions + (rest (range))))
 
 (defn expt-mod-n
   ([base pow n] (expt-mod-n base pow n 1))
