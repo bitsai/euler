@@ -1,5 +1,5 @@
 (ns p15
-  (:use [utils :only (n-choose-k timed-test)]))
+  (:use [euler :only (n-choose-k timed-test)]))
 
 ;; # paths in NxN grid = sum of squares of Nth row of Pascal's triangle
 ;; sum of squares of Nth row of Pascal's triangle = (2N choose N)
@@ -8,5 +8,5 @@
 (timed-test
  "Problem 15"
  137846528820
- (let [n 20]
-   (n-choose-k (* 2 n) n)))
+ (let [N 20]
+   (n-choose-k (* 2 N) N)))

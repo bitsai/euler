@@ -1,5 +1,5 @@
 (ns p11
-  (:use [utils :only (timed-test)]))
+  (:use [euler :only (product max-of timed-test)]))
 
 (def grid [[ 8  2 22 97 38 15  0 40  0 75  4  5  7 78 52 12 50 77 91  8]
 	   [49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48  4 56 62  0]
@@ -22,23 +22,20 @@
 	   [20 73 35 29 78 31 90  1 74 31 49 71 48 86 81 16 23 57  5 54]
 	   [ 1 70 54 71 83 51 54 69 16 92 33 48 61 43 52  1 89 19 67 48]])
 
-(defn groups [pos]
-  (let [right (fn [[row col]] (for [i (range 4)] [row (+ col i)]))
-	down (fn [[row col]] (for [i (range 4)] [(+ row i) col]))
-	dr (fn [[row col]] (for [i (range 4)] [(+ row i) (+ col i)]))
-	dl (fn [[row col]] (for [i (range 4)] [(+ row i) (- col i)]))]
-    [(right pos) (down pos) (dr pos) (dl pos)]))
+(defn get-num [row col]
+  (nth (nth grid row nil) col 0))
 
-(def all-groups (apply concat (for [row (range 20)
-				    col (range 20)]
-				(groups [row col]))))
-
-(defn product [group]
-  (let [get-num (fn [[row col]] (nth (nth grid row nil) col 0))
-	nums (map get-num group)]
-    (reduce * nums)))
+(defn groups [[row col]]
+  (let [right (for [i (range 4)] (get-num row (+ col i)))
+	down (for [i (range 4)] (get-num (+ row i) col))
+	down-right (for [i (range 4)] (get-num (+ row i) (+ col i)))
+	down-left (for [i (range 4)] (get-num (+ row i) (- col i)))]
+    [right down down-right down-left]))
 
 (timed-test
  "Problem 11"
  70600674
- (apply max (map product all-groups)))
+ (let [all-groups (mapcat groups (for [row (range 20)
+                                       col (range 20)]
+                                   [row col]))]
+   (max-of (map product all-groups))))

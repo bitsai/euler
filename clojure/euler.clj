@@ -19,6 +19,35 @@
 (defn sqrt [n]
   (math/sqrt n))
 
+(defn expt [base pow]
+  (math/expt base pow))
+
+(defn digits [n]
+  (map #(Integer/parseInt (str %)) (str n)))
+
+;; Sequence functions
+(defn sum [coll]
+  (reduce + coll))
+
+(defn sum-if [pred coll]
+  (sum (filter pred coll)))
+
+(defn max-of [coll]
+  (reduce max coll))
+
+(defn max-key [k & xs]
+  (first (reduce (fn [x y] (if (> (second x) (second y)) x y))
+                 (map (juxt identity k) xs))))
+
+(defn product [coll]
+  (reduce * coll))
+
+(defn find-first [pred coll]
+  (seq/find-first pred coll))
+
+(defn count-if [pred coll]
+  (count (filter pred coll)))
+
 ;; Predicates
 (defn divides? [a b]
   (zero? (rem a b)))
@@ -54,21 +83,12 @@
 (defn lcm [a b]
   (/ (abs (* a b)) (gcd a b)))
 
-;; Sequence functions
-(defn sum [coll]
-  (reduce + coll))
+;; Factorials
+(defn factorial [n]
+  (product (range 1 (inc n))))
 
-(defn sum-if [pred coll]
-  (sum (filter pred coll)))
-
-(defn max-of [coll]
-  (reduce max coll))
-
-(defn product [coll]
-  (reduce * coll))
-
-(defn find-first [pred coll]
-  (seq/find-first pred coll))
+(defn n-choose-k [n k]
+  (/ (factorial n) (* (factorial k) (factorial (- n k)))))
 
 ;; Sequences
 (defn fibs []

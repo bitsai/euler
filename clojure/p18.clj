@@ -1,5 +1,5 @@
 (ns p18
-  (:use [utils :only (timed-test)]))
+  (:use [euler :only (max-of timed-test)]))
 
 (def triangle [[75]
 	       [95 64]
@@ -17,18 +17,18 @@
 	       [63 66  4 68 89 53 67 30 73 16 69 87 40 31]
 	       [ 4 62 98 27 23  9 70 98 73 93 38 53 60  4 23]])
 
-(defn row-totals [row last-totals]
+(defn best-paths-row [row prev-best-paths-row]
   (for [i (range (count row))]
-    (+ (nth row i) (max (nth last-totals i 0)
-			(nth last-totals (dec i) 0)))))
+    (+ (nth row i) (max (nth prev-best-paths-row i 0)
+			(nth prev-best-paths-row (dec i) 0)))))
 
-(defn triangle-totals [[row & next-rows] totals]
+(defn best-paths-triangle [[row & rows] triangle]
   (if-not row
-    totals
-    (let [new-totals (row-totals row (last totals))]
-      (recur next-rows (conj totals new-totals)))))
+    triangle
+    (let [new-best-paths-row (best-paths-row row (last triangle))]
+      (recur rows (conj triangle new-best-paths-row)))))
 
 (timed-test
  "Problem 18"
  1074
- (apply max (last (triangle-totals triangle []))))
+ (max-of (last (best-paths-triangle triangle []))))

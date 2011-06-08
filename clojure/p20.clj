@@ -1,5 +1,5 @@
 (ns p20
-  (:use [utils :only (factorial digits sum timed-test)]))
+  (:use [euler :only (factorial digits sum timed-test)]))
 
 (timed-test
  "Problem 20"

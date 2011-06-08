@@ -1,62 +1,58 @@
 (ns p17
-  (:use [utils :only (digits count-if sum timed-test)]))
+  (:use [euler :only (digits count-if sum timed-test)]))
 
-(def ones {1 " one "
-	   2 " two "
-	   3 " three "
-	   4 " four "
-	   5 " five "
-	   6 " six "
-	   7 " seven "
-	   8 " eight "
-	   9 " nine "})
+(def ones-words {1 " one "
+                 2 " two "
+                 3 " three "
+                 4 " four "
+                 5 " five "
+                 6 " six "
+                 7 " seven "
+                 8 " eight "
+                 9 " nine "})
 
-(def teens {0 " ten "
-	    1 " eleven "
-	    2 " twelve "
-	    3 " thirteen "
-	    4 " fourteen "
-	    5 " fifteen "
-	    6 " sixteen "
-	    7 " seventeen "
-	    8 " eighteen "
-	    9 " nineteen "})
+(def teens-words {0 " ten "
+                  1 " eleven "
+                  2 " twelve "
+                  3 " thirteen "
+                  4 " fourteen "
+                  5 " fifteen "
+                  6 " sixteen "
+                  7 " seventeen "
+                  8 " eighteen "
+                  9 " nineteen "})
 
-(def tens {2 " twenty "
-	   3 " thirty "
-	   4 " forty "
-	   5 " fifty "
-	   6 " sixty "
-	   7 " seventy "
-	   8 " eighty "
-	   9 " ninety "})
-
-(defn not-zero? [digit]
-  (and (not (nil? digit))
-       (not (zero? digit))))
+(def tens-words {2 " twenty "
+                 3 " thirty "
+                 4 " forty "
+                 5 " fifty "
+                 6 " sixty "
+                 7 " seventy "
+                 8 " eighty "
+                 9 " ninety "})
 
 (defn digit-to-words [digit suffix]
-  (if (not-zero? digit)
-    (let [word (ones digit)]
-      (str word suffix))))
+  (if (pos? digit)
+    (str (ones-words digit) suffix)))
 
-(defn digits-to-words [ten one]
-  (if (= ten 1)
-    (teens one)
-    (str (tens ten) (ones one))))
+(defn digits-to-words [tens-digit ones-digit]
+  (if (= tens-digit 1)
+    (teens-words ones-digit)
+    (str (tens-words tens-digit) (ones-words ones-digit))))
 
-(defn add-and [thousand hundred ten one]
-  (if (and (or (not-zero? thousand) (not-zero? hundred))
-	   (or (not-zero? ten) (not-zero? one)))
+(defn add-and [thousands-digit hundreds-digit tens-digit ones-digit]
+  (if (and (or (pos? thousands-digit) (pos? hundreds-digit))
+	   (or (pos? tens-digit) (pos? ones-digit)))
     " and "))
 
 (defn num-to-words [n]
-  (let [[one ten hundred thousand] (reverse (digits n))]
+  (let [s (format "%04d" n)
+        [thousands-digit hundreds-digit tens-digit ones-digit] (digits s)]
     (str
-     (digit-to-words thousand " thousand ")
-     (digit-to-words hundred " hundred ")
-     (add-and thousand hundred ten one)
-     (digits-to-words ten one))))
+     (digit-to-words thousands-digit " thousand ")
+     (digit-to-words hundreds-digit " hundred ")
+     (add-and thousands-digit hundreds-digit tens-digit ones-digit)
+     (digits-to-words tens-digit ones-digit))))
 
 (defn count-letters [n]
   (let [not-space? (complement #{\space})]
