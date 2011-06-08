@@ -1,8 +1,7 @@
 (ns p7
-  (:use [euler :only (timed-test)])
-  (:use [clojure.contrib.lazy-seqs :only (primes)]))
+  (:use [euler :only (primes timed-test)]))
 
 (timed-test
  "Problem 7"
  104743
- (nth primes 10000))
+ (nth (primes) 9999))

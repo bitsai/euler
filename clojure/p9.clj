@@ -1,7 +1,5 @@
 (ns p9
-  (:use [euler :only (product timed-test)])
-  (:use [clojure.contrib.generic.math-functions :only (sqr)])
-  (:use [clojure.contrib.seq :only (find-first)]))
+  (:use [euler :only (sqr find-first product timed-test)]))
 
 (defn pythagorean? [[a b c]]
   (= (+ (sqr a) (sqr b)) (sqr c)))
