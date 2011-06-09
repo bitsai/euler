@@ -1,15 +1,14 @@
 (ns p22
-  (:use [utils :only (word-score strip-quotes split-commas sum timed-test)])
-  (:use [clojure.java.io :only (reader)]))
+  (:use [euler :only (str-score split-on-commas strip-quotes sum timed-test)])
+  (:require [clojure.string :as str]))
 
 (defn name-score [idx name]
-  (* (inc idx) (word-score name)))
+  (* (inc idx) (str-score name)))
 
 (timed-test
  "Problem 22"
  871198282
- (with-open [rdr (reader "../data/names.txt")]
-   (let [lines (line-seq rdr)
-	 names (split-commas (strip-quotes (first lines)))
-	 scores (map-indexed name-score (sort names))]
-     (sum scores))))
+ (let [s (str/trim (slurp "../data/names.txt"))
+       names (map strip-quotes (split-on-commas s))
+       scores (map-indexed name-score (sort names))]
+   (sum scores)))

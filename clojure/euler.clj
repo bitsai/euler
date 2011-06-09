@@ -1,4 +1,5 @@
 (ns euler
+  (:require [clojure.string :as str])
   (:require [clojure.contrib.math :as math])
   (:require [clojure.contrib.seq :as seq]))
 
@@ -33,7 +34,10 @@
   (sum (filter pred coll)))
 
 (defn max-of [coll]
-  (reduce max coll))
+  (if (seq coll) (reduce max coll)))
+
+(defn max-if [pred coll]
+  (max-of (filter pred coll)))
 
 (defn max-key [k & xs]
   (first (reduce (fn [x y] (if (> (second x) (second y)) x y))
@@ -62,34 +66,6 @@
   (let [s (str n)]
     (= (seq s) (reverse s))))
 
-;; Factorization
-(defn factors [n]
-  (let [root (sqrt n)
-	pairs (for [i (range 1 root) :when (divides? n i)] [i (/ n i)])
-	factors (reduce into [] pairs)]
-    (if (divides? n root)
-      (conj factors root)
-      factors)))
-
-(defn prime-factors [n]
-  (filter prime? (factors n)))
-
-;; GCD/LCM
-(defn gcd [a b]
-  (if (zero? b)
-    a
-    (recur b (rem a b))))
-
-(defn lcm [a b]
-  (/ (abs (* a b)) (gcd a b)))
-
-;; Factorials
-(defn factorial [n]
-  (product (range 1 (inc n))))
-
-(defn n-choose-k [n k]
-  (/ (factorial n) (* (factorial k) (factorial (- n k)))))
-
 ;; Sequences
 (defn fibs []
   (let [f (fn [[a b]] [b (+ a b)])]
@@ -110,3 +86,74 @@
        (>= (sqr p) n) (concat primes ps)
        :else (recur (remove #(divides? % p) ps)
                     (conj primes p))))))
+
+;; Factorization
+(defn factors [n]
+  (let [root (sqrt n)
+	pairs (for [i (range 1 root) :when (divides? n i)] [i (/ n i)])
+	factors (reduce into [] pairs)]
+    (if (divides? n root)
+      (conj factors root)
+      factors)))
+
+(defn prime-factors [n]
+  (filter prime? (factors n)))
+
+(defn proper-divisors [n]
+  (remove #{n} (factors n)))
+
+;; GCD/LCM
+(defn gcd [a b]
+  (if (zero? b)
+    a
+    (recur b (rem a b))))
+
+(defn lcm [a b]
+  (/ (abs (* a b)) (gcd a b)))
+
+;; Factorials
+(defn factorial [n]
+  (product (range 1 (inc n))))
+
+(defn n-choose-k [n k]
+  (/ (factorial n) (* (factorial k) (factorial (- n k)))))
+
+;; String functions
+(defn char-score [c]
+  (- (int c) 64))
+
+(defn str-score [s]
+  (sum (map char-score s)))
+
+(defn split-on-commas [s]
+  (str/split s #","))
+
+(defn strip-quotes [s]
+  (str/replace s "\"" ""))
+
+;; Permutations
+;; http://en.wikipedia.org/wiki/Permutation, Pandita's method
+(defn next-permutation [v]
+  (let [len (count v)]
+    ;; find k
+    (if-let [k (loop [i (- len 2)]
+                 (cond (neg? i) nil
+                       (< (v i) (v (inc i))) i
+                       :else (recur (dec i))))]
+      ;; find l
+      (let [l (loop [i (dec len)]
+		(cond (< (v k) (v i)) i
+                      :else (recur (dec i))))]
+        ;; swap a[k] and a[l], reverse a[k+1] to a[n]
+        (loop [v (assoc v k (v l) l (v k))
+               i (inc k)
+               j (dec len)]
+	  (if (< i j)
+	    (recur (assoc v i (v j) j (v i))
+                   (inc i)
+                   (dec j))
+	    v))))))
+
+(defn permutations [& xs]
+  (let [v (vec (sort xs))]
+    (take-while identity (iterate next-permutation v))))
