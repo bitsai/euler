@@ -36,9 +36,6 @@
 (defn max-of [coll]
   (if (seq coll) (reduce max coll)))
 
-(defn max-if [pred coll]
-  (max-of (filter pred coll)))
-
 (defn max-key [k & xs]
   (first (reduce (fn [x y] (if (> (second x) (second y)) x y))
                  (map (juxt identity k) xs))))
