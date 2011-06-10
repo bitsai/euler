@@ -4,4 +4,4 @@
 (timed-test
  "Problem 7"
  104743
- (nth (primes) 9999))
+ (nth (primes) 10000))
