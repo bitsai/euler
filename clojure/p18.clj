@@ -25,10 +25,10 @@
 (defn best-paths-triangle [[row & rows] triangle]
   (if-not row
     triangle
-    (let [new-best-paths-row (best-paths-row row (last triangle))]
+    (let [new-best-paths-row (best-paths-row row (peek triangle))]
       (recur rows (conj triangle new-best-paths-row)))))
 
 (timed-test
  "Problem 18"
  1074
- (max-of (last (best-paths-triangle triangle []))))
+ (max-of (peek (best-paths-triangle triangle []))))
