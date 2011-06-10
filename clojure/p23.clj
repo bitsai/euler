@@ -7,9 +7,13 @@
 (timed-test
  "Problem 23"
  4179871
- (let [nums (range 1 20162)
+ (let [n 20162
+       nums (range 1 n)
        abundants (vec (filter abundant? nums))
-       sums-of-abundants (set (for [i (range (count abundants))
-				    j (range (inc i))]
-				(+ (abundants i) (abundants j))))]
-   (sum (remove sums-of-abundants nums))))
+       add-abundants (fn [i j] (+ (abundants i) (abundants j)))
+       sums-of-abundants (boolean-array n false)]
+   (doseq [i (range (count abundants))
+           j (range i (count abundants))
+           :while (< (add-abundants i j) n)]
+     (aset sums-of-abundants (add-abundants i j) true))
+   (sum (remove #(aget sums-of-abundants %) nums))))
