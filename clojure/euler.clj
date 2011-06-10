@@ -54,10 +54,12 @@
   (zero? (rem a b)))
 
 (defn prime? [n]
-  (if (>= n 2)
-    (let [root (sqrt n)
-	  xs (cons 2 (range 3 (inc root) 2))]
-      (not-any? #(divides? n %) xs))))
+  (cond
+   (< n 2) false
+   (= n 2) true
+   :else (let [root (sqrt n)
+               xs (cons 2 (range 3 (inc root) 2))]
+           (not-any? #(divides? n %) xs))))
 
 (defn palindrome? [n]
   (let [s (str n)]
@@ -74,15 +76,22 @@
 (defn primes []
   (filter prime? (naturals)))
 
+;; en.wikipedia.org/wiki/Sieve_of_Eratosthenes, with all improvements
 (defn prime-sieve [n]
-  (if (> n 2)
-    (loop [[p :as ps] (range 3 n 2)
-           primes [2]]
-      (cond
-       (empty? ps) primes
-       (>= (sqr p) n) (concat primes ps)
-       :else (recur (remove #(divides? % p) ps)
-                    (conj primes p))))))
+  (let [arr (boolean-array n true)]
+    ;; Cross off 0, 1, even nums from 4 up to n
+    (aset arr 0 false)
+    (aset arr 1 false)
+    (doseq [i (range 4 n 2)]
+      (aset arr i false))
+    ;; For p = (3, 5, ..., (sqrt n))
+    (doseq [p (range 3 (sqrt n) 2)]
+      ;; If p is not already crossed off
+      (if (aget arr p)
+        ;; Cross off odd multiples from p^2 up to n
+        (doseq [multiple (range (sqr p) n (* 2 p))]
+          (aset arr multiple false))))
+    (filter #(aget arr %) (range 2 n))))
 
 ;; Factorization
 (defn factors [n]
@@ -129,7 +138,7 @@
   (str/replace s "\"" ""))
 
 ;; Permutations
-;; http://en.wikipedia.org/wiki/Permutation, Pandita's method
+;; en.wikipedia.org/wiki/Permutation, Pandita's method
 (defn next-permutation [v]
   (let [len (count v)]
     ;; find k
@@ -141,7 +150,7 @@
       (let [l (loop [i (dec len)]
 		(cond (< (v k) (v i)) i
                       :else (recur (dec i))))]
-        ;; swap a[k] and a[l], reverse a[k+1] to a[n]
+        ;; swap a[k] and a[l], reverse sequence from a[k+1] to a[n]
         (loop [v (assoc v k (v l) l (v k))
                i (inc k)
                j (dec len)]
