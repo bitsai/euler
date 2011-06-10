@@ -9,6 +9,5 @@
     (and (= (d b) a) (not= a b))))
 
 (timed-test
- "Problem 21"
  31626
  (sum-if amicable? (range 220 10000)))

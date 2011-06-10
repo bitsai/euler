@@ -12,7 +12,6 @@
   (* n (/ (inc n) 2)))
 
 (timed-test
- "Problem 12"
  76576500
  (let [n (find-first #(> (count-nth-tri-num-factors %) 500) (naturals))]
    (nth-tri-num n)))

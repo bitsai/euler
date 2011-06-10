@@ -33,7 +33,6 @@
     [right down down-right down-left]))
 
 (timed-test
- "Problem 11"
  70600674
  (let [all-groups (mapcat groups (for [row (range 20)
                                        col (range 20)]

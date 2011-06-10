@@ -5,7 +5,6 @@
   (= (+ (sqr a) (sqr b)) (sqr c)))
 
 (timed-test
- "Problem 9"
  31875000
  (let [triplets (for [a (range 1 (/ 1000 3))
 		      b (range (inc a) (/ 1000 2))]

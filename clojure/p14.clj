@@ -23,6 +23,5 @@
            cnt)))
 
 (timed-test
- "Problem 14"
  837799
  (apply max-key count-terms (range 1 N)))

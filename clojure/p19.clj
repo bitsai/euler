@@ -18,7 +18,6 @@
        (= (day-of-month d) 1)))
 
 (timed-test
- "Problem 19"
  171
  (let [start (GregorianCalendar. 1901 0 1)
        end (GregorianCalendar. 2001 0 1)

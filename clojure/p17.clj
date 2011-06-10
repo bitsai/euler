@@ -59,6 +59,5 @@
     (count-if not-space? (num-to-words n))))
 
 (timed-test
- "Problem 17"
  21124
  (sum (map count-letters (range 1 (inc 1000)))))

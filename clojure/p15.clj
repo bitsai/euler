@@ -6,7 +6,6 @@
 ;; (http://en.wikipedia.org/wiki/Pascal_triangle#Rows)
 
 (timed-test
- "Problem 15"
  137846528820
  (let [N 20]
    (n-choose-k (* 2 N) N)))

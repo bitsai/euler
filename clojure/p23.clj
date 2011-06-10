@@ -5,7 +5,6 @@
   (> (sum (proper-divisors n)) n))
 
 (timed-test
- "Problem 23"
  4179871
  (let [n 20162
        nums (range 1 n)

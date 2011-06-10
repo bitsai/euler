@@ -4,11 +4,12 @@
   (:require [clojure.contrib.seq :as seq]))
 
 ;; Testing macro
-(defmacro timed-test [name answer expr]
+(defmacro timed-test [answer expr]
   `(do
-     (println ~name)
+     (print (format "%-5s" (ns-name *ns*)))
      (let [result# (time ~expr)]
-       (println "[" (if (= result# ~answer) "OK" "FAIL") "]"))))
+       (if (not= result# ~answer)
+         (println "*** FAIL ***")))))
 
 ;; Basic functions
 (defn abs [n]

@@ -6,7 +6,6 @@
   (* (inc idx) (str-score name)))
 
 (timed-test
- "Problem 22"
  871198282
  (let [s (str/trim (slurp "../data/names.txt"))
        names (map strip-quotes (split-on-commas s))

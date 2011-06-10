@@ -29,6 +29,5 @@
       (recur rows (conj triangle new-best-paths-row)))))
 
 (timed-test
- "Problem 18"
  1074
  (max-of (peek (best-paths-triangle triangle []))))
