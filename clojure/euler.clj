@@ -96,7 +96,7 @@
 ;; Factorization
 (defn factors [n]
   (let [root (sqrt n)
-	pairs (for [i (range 1 root) :when (divides? n i)] [i (/ n i)])
+	pairs (for [i (range 1 root) :when (divides? n i)] [(/ n i) i])
 	factors (reduce into [] pairs)]
     (if (divides? n root)
       (conj factors root)
@@ -106,7 +106,7 @@
   (filter prime? (factors n)))
 
 (defn proper-divisors [n]
-  (remove #{n} (factors n)))
+  (rest (factors n)))
 
 ;; GCD/LCM
 (defn gcd [a b]
