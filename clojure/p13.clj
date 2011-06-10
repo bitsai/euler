@@ -1,5 +1,5 @@
 (ns p13
-  (:use [euler :only (sum timed-test)]))
+  (:use [euler :only (sum digits timed-test)]))
 
 (def nums [37107287533902102798797998220837590246510135740250
            46376937677490009712648124896970078050417018260538
@@ -104,5 +104,5 @@
 
 (timed-test
  "Problem 13"
- "5537376230"
- (subs (str (sum nums)) 0 10))
+ '(5 5 3 7 3 7 6 2 3 0)
+ (take 10 (digits (sum nums))))
