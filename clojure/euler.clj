@@ -41,6 +41,9 @@
   (first (reduce (fn [x y] (if (> (second x) (second y)) x y))
                  (map (juxt identity k) xs))))
 
+(defn max-by [k coll]
+  (apply max-key k coll))
+
 (defn product [coll]
   (reduce * coll))
 

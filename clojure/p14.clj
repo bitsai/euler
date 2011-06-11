@@ -1,5 +1,5 @@
 (ns p14
-  (:use [euler :only (max-key timed-test)]))
+  (:use [euler :only (max-by timed-test)]))
 
 (def N 1000000)
 
@@ -24,4 +24,4 @@
 
 (timed-test
  837799
- (apply max-key count-terms (range 1 N)))
+ (max-by count-terms (range 1 N)))

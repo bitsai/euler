@@ -1,5 +1,5 @@
 (ns p26
-  (:use [euler :only (max-key timed-test)]))
+  (:use [euler :only (max-by timed-test)]))
 
 ;; Get period of the repeating decimal 1/d by repeated long division
 ;; Track remainders we see along the way
@@ -15,4 +15,4 @@
 
 (timed-test
  983
- (apply max-key period (range 1 1000)))
+ (max-by period (range 1 1000)))

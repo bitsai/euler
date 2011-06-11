@@ -1,5 +1,5 @@
 (ns p27
-  (:use [euler :only (sqr prime? prime-sieve max-key timed-test)]))
+  (:use [euler :only (sqr prime? prime-sieve max-by timed-test)]))
 
 (defn quadratic [n a b]
   (+ (sqr n) (* a n) b))
@@ -12,5 +12,5 @@
  (let [pairs (for [a (range -999 1000 2)
                    b (prime-sieve 1000)]
                [a b])
-       [a b] (apply max-key count-consecutive-primes pairs)]
+       [a b] (max-by count-consecutive-primes pairs)]
    (* a b)))
