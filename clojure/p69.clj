@@ -1,11 +1,11 @@
 (ns p69
-  (:use [utils :only (product timed-test)])
-  (:use [clojure.contrib.lazy-seqs :only (primes)]))
+  (:use [euler :only (primes product naturals timed-test)]))
+
+;; n / phi(n) is max for n that is product of most consecutive primes
+(defn product-k-consecutive-primes [k]
+  (product (take k (primes))))
 
 (timed-test
- "Problem 69"
  510510
- (let [product-k-smallest-primes #(product (take % primes))
-       products (map product-k-smallest-primes (next (range)))
-       products-lte-1000000 (take-while #(<= % 1000000) products)]
-   (last products-lte-1000000)))
+ (let [products (map product-k-consecutive-primes (naturals))]
+   (last (take-while #(<= % 1000000) products))))

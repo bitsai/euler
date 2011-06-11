@@ -1,24 +1,23 @@
 (ns p67
-  (:require [clojure.string :as str])
-  (:use [utils :only (timed-test)]))
+  (:use [euler :only (max-of timed-test)])
+  (:require [clojure.string :as str]))
 
 (defn read-triangle []
-  (let [lines (str/split-lines (slurp "../data/triangle.txt"))
-	to-ints (fn [s] (map #(Integer/parseInt %) (str/split s #" ")))]
-    (map to-ints lines)))
+  (for [line (str/split-lines (slurp "../data/triangle.txt"))]
+    (for [token (str/split line #" ")]
+      (Integer/parseInt token))))
 
-(defn row-totals [row last-totals]
+(defn best-paths-row [row prev-best-paths-row]
   (for [i (range (count row))]
-    (+ (nth row i) (max (nth last-totals i 0)
-			(nth last-totals (dec i) 0)))))
+    (+ (nth row i) (max (nth prev-best-paths-row i 0)
+			(nth prev-best-paths-row (dec i) 0)))))
 
-(defn triangle-totals [[row & next-rows] totals]
+(defn best-paths-triangle [[row & rows] triangle]
   (if-not row
-    totals
-    (let [new-totals (row-totals row (last totals))]
-      (recur next-rows (conj totals new-totals)))))
+    triangle
+    (let [new-best-paths-row (best-paths-row row (peek triangle))]
+      (recur rows (conj triangle new-best-paths-row)))))
 
 (timed-test
- "Problem 67"
  7273
- (apply max (last (triangle-totals (read-triangle) []))))
+ (max-of (peek (best-paths-triangle (read-triangle) []))))

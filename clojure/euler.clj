@@ -23,6 +23,9 @@
 (defn expt [base pow]
   (math/expt base pow))
 
+(defn ceil [n]
+  (math/ceil n))
+
 (defn digits [n]
   (map #(Integer/parseInt (str %)) (str n)))
 
@@ -42,6 +45,13 @@
 
 (defn max-by [k coll]
   (apply max-key k coll))
+
+(defn min-key [k & xs]
+  (first (reduce (fn [x y] (if (< (second x) (second y)) x y))
+                 (map (juxt identity k) xs))))
+
+(defn min-by [k coll]
+  (apply min-key k coll))
 
 (defn product [coll]
   (reduce * coll))
@@ -83,25 +93,30 @@
 (defn naturals []
   (rest (range)))
 
+(defn triangles []
+  (reductions + (naturals)))
+
 (defn primes []
   (filter prime? (naturals)))
 
 ;; en.wikipedia.org/wiki/Sieve_of_Eratosthenes, with all improvements
 (defn prime-sieve [n]
-  (let [arr (boolean-array n true)]
-    ;; Cross off 0, 1, even nums from 4 up to n
-    (aset arr 0 false)
-    (aset arr 1 false)
-    (doseq [i (range 4 n 2)]
-      (aset arr i false))
-    ;; For p = (3, 5, ..., (sqrt n))
-    (doseq [p (range 3 (sqrt n) 2)]
-      ;; If p is not already crossed off
-      (if (aget arr p)
-        ;; Cross off odd multiples from p^2 up to n
-        (doseq [multiple (range (sqr p) n (* 2 p))]
-          (aset arr multiple false))))
-    (filter #(aget arr %) (range 2 n))))
+  (when (> n 2)
+    (let [n (ceil n)
+          arr (boolean-array n true)]
+      ;; Cross off 0, 1, even nums from 4 up to n
+      (aset arr 0 false)
+      (aset arr 1 false)
+      (doseq [i (range 4 n 2)]
+        (aset arr i false))
+      ;; For p = (3, 5, ..., (sqrt n))
+      (doseq [p (range 3 (sqrt n) 2)]
+        ;; If p is not already crossed off
+        (if (aget arr p)
+          ;; Cross off odd multiples from p^2 up to n
+          (doseq [multiple (range (sqr p) n (* 2 p))]
+            (aset arr multiple false))))
+      (filter #(aget arr %) (range 2 n)))))
 
 ;; Factorization
 (defn factors [n]

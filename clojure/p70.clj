@@ -1,29 +1,30 @@
 (ns p70
-  (:use [utils :only (prime-sieve timed-test)]))
+  (:use [euler :only (prime-sieve sqrt min-by timed-test)]))
 
-(defn n [[p1 p2]]
+;; n / phi(n) for n < N is min when n = product of 2 primes near sqrt(N)
+(defn n [p1 p2]
   (* p1 p2))
 
-(defn phi [[p1 p2]]
+;; If n = product of primes p1 and p2, phi(n) is simply (p1-1) * (p2-1)
+(defn phi [p1 p2]
   (* (dec p1) (dec p2)))
 
 (defn permutation? [x y]
-  (let [sorted-str #(sort (str %))]
-    (= (sorted-str x) (sorted-str y))))
+  (= (sort (str x)) (sort (str y))))
 
-(defn phi-is-permutation-of-n? [pair]
-  (permutation? (phi pair) (n pair)))
+(defn phi-permutation-of-n? [[p1 p2]]
+  (permutation? (phi p1 p2) (n p1 p2)))
 
-(defn ratio [pair]
-  (/ (n pair) (phi pair)))
+(defn n-phi-ratio [[p1 p2]]
+  (/ (n p1 p2) (phi p1 p2)))
 
 (timed-test
- "Problem 70"
  8319823
- (let [primes (prime-sieve 5000)
-       pairs (for [p1 primes
-		   p2 primes
-		   :when (< (* p1 p2) 10000000)]
-	       [p1 p2])
-       permutation-pairs (filter phi-is-permutation-of-n? pairs)]
-   (n (apply min-key ratio permutation-pairs))))
+ (let [N 10000000
+       primes (vec (prime-sieve (* 2 (sqrt N))))
+       ns (for [i (range (count primes))
+                j (range i (count primes))
+                :when (< (n (primes i) (primes j)) N)]
+            [(primes i) (primes j)])
+       [p1 p2] (min-by n-phi-ratio (filter phi-permutation-of-n? ns))]
+   (n p1 p2)))

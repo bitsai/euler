@@ -1,10 +1,10 @@
 (ns p45
-  (:use [utils :only (s-gonal? triangle-nums timed-test)]))
+  (:use [euler :only (s-gonal? triangles timed-test)]))
+
+(defn penta-hexa-gonal? [n]
+  (and (s-gonal? 5 n) (s-gonal? 6 n)))
 
 (timed-test
- "Problem 45"
  1533776805
- (let [triple-gonal (filter
-		     #(and (s-gonal? % 5) (s-gonal? % 6))
-		     (triangle-nums))]
-   (nth triple-gonal 2)))
+ (let [tri-penta-hexa-gonals (filter penta-hexa-gonal? (triangles))]
+   (nth tri-penta-hexa-gonals 2)))
