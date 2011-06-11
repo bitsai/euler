@@ -69,6 +69,13 @@
   (let [s (str n)]
     (= (seq s) (reverse s))))
 
+(defn s-gonal? [s n]
+  (let [a (* (- (* 8 s) 16) n)
+	b (sqr (- s 4))
+	numerator (- (+ (sqrt (+ a b)) s) 4)
+	denominator (- (* 2 s) 4)]
+    (integer? (/ numerator denominator))))
+
 ;; Sequences
 (defn fibs []
   (let [f (fn [[a b]] [b (+ a b)])]
@@ -100,7 +107,8 @@
 ;; Factorization
 (defn factors [n]
   (let [root (sqrt n)
-	pairs (for [i (range 1 root) :when (divides? n i)] [(/ n i) i])
+	pairs (for [i (range 1 root) :when (divides? n i)]
+                [(/ n i) i])
 	factors (reduce into [] pairs)]
     (if (divides? n root)
       (conj factors root)
@@ -128,18 +136,17 @@
 (defn n-choose-k [n k]
   (/ (factorial n) (* (factorial k) (factorial (- n k)))))
 
-;; String functions
-(defn char-score [c]
+;; Text functions
+(defn char-value [c]
   (- (int c) 64))
 
-(defn str-score [s]
-  (sum (map char-score s)))
+(defn word-value [s]
+  (sum (map char-value s)))
 
-(defn split-on-commas [s]
-  (str/split s #","))
-
-(defn strip-quotes [s]
-  (str/replace s "\"" ""))
+(defn read-quoted-csv [f]
+  (-> (str/trim (slurp f))
+      (str/replace "\"" "")
+      (str/split #",")))
 
 ;; Permutations
 ;; en.wikipedia.org/wiki/Permutation, Pandita's method

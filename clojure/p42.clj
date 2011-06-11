@@ -1,12 +1,7 @@
 (ns p42
-  (:use [utils :only (strip-quotes split-commas word-score s-gonal? count-if timed-test)])
-  (:use [clojure.java.io :only (reader)]))
+  (:use [euler :only (read-quoted-csv word-value s-gonal? count-if timed-test)]))
 
 (timed-test
- "Problem 42"
  162
- (with-open [rdr (reader "../data/words.txt")]
-   (let [lines (line-seq rdr)
-	 words (split-commas (strip-quotes (first lines)))
-	 scores (map word-score words)]
-     (count-if #(s-gonal? % 3) scores))))
+ (let [words (read-quoted-csv "../data/words.txt")]
+   (count-if #(s-gonal? 3 %) (map word-value words))))
