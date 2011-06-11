@@ -1,7 +1,6 @@
 (ns euler
   (:require [clojure.string :as str])
-  (:require [clojure.contrib.math :as math])
-  (:require [clojure.contrib.seq :as seq]))
+  (:require [clojure.contrib.math :as math]))
 
 ;; Testing macro
 (defmacro timed-test [answer expr]
@@ -48,7 +47,7 @@
   (reduce * coll))
 
 (defn find-first [pred coll]
-  (seq/find-first pred coll))
+  (first (filter pred coll)))
 
 (defn count-if [pred coll]
   (count (filter pred coll)))
