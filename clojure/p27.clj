@@ -1,17 +1,16 @@
 (ns p27
-  (:use [utils :only (quadratic prime? prime-sieve timed-test)]))
+  (:use [euler :only (sqr prime? prime-sieve max-key timed-test)]))
 
-(defn consecutive-primes [a b]
-  (take-while #(prime? (quadratic % a b)) (range)))
+(defn quadratic [n a b]
+  (+ (sqr n) (* a n) b))
 
-(defn make-pairs [as]
-  (for [a as
-	b (prime-sieve 1000)]
-    [(* a b) (count (consecutive-primes a b))]))
+(defn count-consecutive-primes [[a b]]
+  (count (take-while #(prime? (quadratic % a b)) (range))))
 
 (timed-test
- "Problem 27"
  -59231
- (let [f (fn [pairs] (apply max-key second pairs))]
-   (first (f (pmap f [(make-pairs (range -999 0 2))
-		      (make-pairs (range 0 1000 2))])))))
+ (let [pairs (for [a (range -999 1000 2)
+                   b (prime-sieve 1000)]
+               [a b])
+       [a b] (apply max-key count-consecutive-primes pairs)]
+   (* a b)))

@@ -1,16 +1,12 @@
 (ns p28
-  (:use [utils :only (timed-test)]))
+  (:use [euler :only (sqr sum timed-test)]))
 
-(defn corner-nums [n]
+(defn corners [n]
   (for [i (range 4)]
-    (- (* n n) (* i (dec n)))))
-
-(defn sum-all-corner-nums [max-n]
-  (let [ns (range 3 (inc max-n) 2)
-	all-corner-nums (mapcat corner-nums ns)]
-    (apply + 1 all-corner-nums)))
+    (- (sqr n) (* i (dec n)))))
 
 (timed-test
- "Problem 28"
  669171001
- (sum-all-corner-nums 1001))
+ (let [sizes (range 3 (inc 1001) 2)
+       all-corners (mapcat corners sizes)]
+   (apply + 1 all-corners)))

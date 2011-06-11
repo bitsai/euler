@@ -1,6 +1,9 @@
 (ns p26
-  (:use [utils :only (timed-test)]))
+  (:use [euler :only (max-key timed-test)]))
 
+;; Get period of the repeating decimal 1/d by repeated long division
+;; Track remainders we see along the way
+;; When a remainder is seen for the second time, we can compute the period
 (defn period
   ([d] (period 1 d []))
   ([n d remainders]
@@ -8,10 +11,8 @@
        (cond
 	(zero? r) 0
 	(some #{r} remainders) (count (drop-while #(not= r %) remainders))
-	:else (period r d (conj remainders r))))))
+	:else (recur r d (conj remainders r))))))
 
 (timed-test
- "Problem 26"
  983
- (let [pairs (map (juxt identity period) (range 1 1000))]
-   (first (apply max-key second pairs))))
+ (apply max-key period (range 1 1000)))
