@@ -1,44 +1,43 @@
 (ns p96
-  (:use [clojure.java.io :only (reader)])
-  (:use [clojure.string :only (join split-lines)])
-  (:use [utils :only (sum timed-test)]))
+  (:use [euler :only (min-by sum timed-test)])
+  (:require [clojure.string :as str]))
 
-(defn cross [A B]
-  (for [a A, b B] (str a b)))
+(defn cross [as bs]
+  (for [a as, b bs] (str a b)))
 
 (defn all? [coll]
-  (every? #(not (false? %)) coll))
+  (every? identity coll))
 
 (defn in? [x coll]
   (some #{x} coll))
 
 (defn set-values! [values s s-values]
-  (dosync (alter values #(assoc-in % [s] s-values))))
+  (swap! values assoc s s-values))
 
-(defn copy [reference]
-  (ref @reference))
+(defn copy [a]
+  (atom @a))
 
 (def digits "123456789")
 (def rows "ABCDEFGHI")
 (def cols digits)
 (def squares (cross rows cols))
-(def unitlist
-  (concat
-   (for [c cols] (cross rows (str c)))
-   (for [r rows] (cross (str r) cols))
-   (for [rs (partition 3 rows) cs (partition 3 cols)] (cross rs cs))))
-(def units
-  (into {} (for [s squares] [s (filter #(in? s %) unitlist)])))
-(def peers
-  (into {} (for [s squares] [s (set (remove #{s} (flatten (units s))))])))
+(def unitlist (concat (for [c cols]
+                        (cross rows (str c)))
+                      (for [r rows]
+                        (cross (str r) cols))
+                      (for [rs (partition 3 rows), cs (partition 3 cols)]
+                        (cross rs cs))))
+(def units (into {} (for [s squares]
+                      [s (filter #(in? s %) unitlist)])))
+(def peers (into {} (for [s squares]
+                      [s (set (remove #{s} (flatten (units s))))])))
 
 (declare assign eliminate helper-1 helper-2)
 
 (defn assign [values s d]
   (let [other-values (remove #{d} (@values s))]
     (if (all? (for [d2 other-values] (eliminate values s d2)))
-      values
-      false)))
+      values)))
 
 (defn eliminate [values s d]
   (if-not (in? d (@values s))
@@ -46,17 +45,15 @@
     (let [other-values (remove #{d} (@values s))]
       (set-values! values s other-values)
       (cond
-       (false? (helper-1 values s d)) false
-       (false? (helper-2 values s d)) false
+       (not (helper-1 values s d)) false
+       (not (helper-2 values s d)) false
        :else values))))
 
 (defn helper-1 [values s d]
   (case (count (@values s))
 	0 false
 	1 (let [d2 (first (@values s))]
-	    (if-not (all? (for [s2 (peers s)] (eliminate values s2 d2)))
-	      false
-	      true))
+	    (all? (for [s2 (peers s)] (eliminate values s2 d2))))
 	true))
 
 (defn helper-2 [values s d]
@@ -64,48 +61,38 @@
 	  (let [dplaces (filter #(in? d (@values %)) u)]
 	    (case (count dplaces)
 		  0 false
-		  1 (if-not (assign values (first dplaces) d)
-		      false
-		      true)  
+		  1 (assign values (first dplaces) d)
 		  true)))))
 
 (defn grid-values [grid]
   (zipmap squares grid))
 
 (defn parse-grid [grid]
-  (let [values (ref (into {} (for [s squares] [s digits])))]
-    (if-not (all? (for [[s d] (grid-values grid) :when (in? d digits)]
-		    (assign values s d)))
-      false
+  (let [values (atom (into {} (for [s squares] [s digits])))]
+    (if (all? (for [[s d] (grid-values grid) :when (in? d digits)]
+                (assign values s d)))
       values)))
-
-(defn display [values]
-  (let [lines (for [r rows]
-		(let [strs (for [c cols] (apply str (@values (str r c))))]
-		  (join " " strs)))]
-    (println (join "\n" lines))))
 
 (defn search [values]
   (cond
-   (false? values) false
-   (all? (for [s squares] (= 1 (count (@values s))))) values
-   :else (let [unfilled (filter #(< 1 (count (@values %))) squares)
-	       s (apply min-key #(count (@values %)) unfilled)]
+   (not values) false
+   (all? (for [s squares] (= (count (@values s)) 1))) values
+   :else (let [unfilled (filter #(> (count (@values %)) 1) squares)
+	       s (min-by #(count (@values %)) unfilled)]
 	   (some #(search (assign (copy values) s %)) (@values s)))))
 
 (defn solve [grid]
   (search (parse-grid grid)))
 
 (defn top-left-num [values]
-  (let [get-value #(first (@values %))
-	s (str (get-value "A1") (get-value "A2") (get-value "A3"))]
-    (Integer/parseInt s)))
+  (let [value-of (fn [s] (first (@values s)))
+	num-str (str (value-of "A1") (value-of "A2") (value-of "A3"))]
+    (Integer/parseInt num-str)))
 
 (timed-test
- "Problem 96"
  24702
- (with-open [rdr (reader "../data/sudoku.txt")]
-   (let [grid-lines (filter #(re-matches #"^\d+$" %) (line-seq rdr))
-	 grids (map #(apply concat %) (partition 9 grid-lines))
-	 solutions (map solve grids)]
-     (sum (map top-left-num solutions)))))
+ (let [lines (str/split-lines (slurp "../data/sudoku.txt"))
+       grid-lines (filter #(re-matches #"^\d{9}$" %) lines)
+       grids (map str/join (partition 9 grid-lines))
+       solutions (map solve grids)]
+   (sum (map top-left-num solutions))))

@@ -1,68 +1,36 @@
 (ns p79
-  (use [utils :only (map-vals timed-test)])
-  (use [clojure.contrib.graph :only (dependency-list)]))
+  (:use [euler :only (fmap find-first timed-test)])
+  (:require [clojure.string :as str]))
 
-(def traces ["319"
-	     "680"
-	     "180"
-	     "690"
-	     "129"
-	     "620"
-	     "762"
-	     "689"
-	     "762"
-	     "318"
-	     "368"
-	     "710"
-	     "720"
-	     "710"
-	     "629"
-	     "168"
-	     "160"
-	     "689"
-	     "716"
-	     "731"
-	     "736"
-	     "729"
-	     "316"
-	     "729"
-	     "729"
-	     "710"
-	     "769"
-	     "290"
-	     "719"
-	     "680"
-	     "318"
-	     "389"
-	     "162"
-	     "289"
-	     "162"
-	     "718"
-	     "729"
-	     "319"
-	     "790"
-	     "680"
-	     "890"
-	     "362"
-	     "319"
-	     "760"
-	     "316"
-	     "729"
-	     "380"
-	     "319"
-	     "728"
-	     "716"])
+(defn get-nodes [partial-orders]
+  (set (reduce into [] partial-orders)))
 
-(def nodes (distinct (apply concat traces)))
-
-(def neighbors
-  (let [pairs (mapcat #(partition 2 1 %) traces)
+(defn get-adjacency-list [partial-orders]
+  (let [pairs (mapcat #(partition 2 1 %) partial-orders)
 	groups (group-by second pairs)]
-    (map-vals #(distinct (map first %)) groups)))
+    (fmap #(set (map first %)) groups)))
 
-(def graph {:nodes nodes :neighbors neighbors})
+(defn no-edges? [node adjacency-list]
+  (zero? (count (adjacency-list node))))
+
+(defn remove-node [node adjacency-list]
+  (dissoc (fmap #(disj % node) adjacency-list) node))
+
+(defn topological-sort [nodes adjacency-list]
+  (loop [nodes nodes
+         adjacency-list adjacency-list
+         output []]
+    (if-let [n (find-first #(no-edges? % adjacency-list) nodes)]
+      (recur (disj nodes n)
+             (remove-node n adjacency-list)
+             (conj output n))
+      (if (empty? adjacency-list)
+        output
+        (throw (Exception. "cyclic graph!"))))))
 
 (timed-test
- "Problem 79"
- "73162890"
- (apply str (apply concat (dependency-list graph))))
+ '(\7 \3 \1 \6 \2 \8 \9 \0)
+ (let [logins (str/split-lines (slurp "../data/keylog.txt"))
+       nodes (get-nodes logins)
+       adjacency-list (get-adjacency-list logins)]
+   (topological-sort nodes adjacency-list)))

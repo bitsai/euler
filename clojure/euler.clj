@@ -1,5 +1,7 @@
 (ns euler
   (:require [clojure.string :as str])
+  (:require [clojure.contrib.generic.functor :as functor])
+  (:require [clojure.contrib.generic.math-functions :as math-functions])
   (:require [clojure.contrib.math :as math]))
 
 ;; Testing macro
@@ -23,11 +25,25 @@
 (defn expt [base pow]
   (math/expt base pow))
 
+(defn expt-mod-n [base pow n]
+  (loop [pow pow
+         acc 1]
+    (let [new-acc (rem (* base acc) n)]
+      (cond
+       (< pow 0) (expt base pow)
+       (= pow 0) 1
+       (= pow 1) new-acc
+       :else (recur (dec pow)
+                    new-acc)))))
+
 (defn ceil [n]
   (math/ceil n))
 
 (defn digits [n]
   (map #(Integer/parseInt (str %)) (str n)))
+
+(defn log [n]
+  (math-functions/log n))
 
 ;; Sequence functions
 (defn sum [coll]
@@ -61,6 +77,9 @@
 
 (defn count-if [pred coll]
   (count (filter pred coll)))
+
+(defn fmap [f coll]
+  (functor/fmap f coll))
 
 ;; Predicates
 (defn divides? [a b]

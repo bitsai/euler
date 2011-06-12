@@ -1,19 +1,17 @@
 (ns p99
-  (:use [utils :only (split-commas timed-test)])
-  (:use [clojure.java.io :only (reader)])
-  (:use [clojure.contrib.generic.math-functions :only (log)]))
+  (:use [euler :only (log max-by timed-test)])
+  (:require [clojure.string :as str]))
 
-(defn process-line [idx line]
-  (let [[base-str exp-str] (split-commas line)
+;; x^y is proportional to y * log(x), which is much faster to compute
+;; Only the latter is needed to find the correct line number
+
+(defn line-value [i lines]
+  (let [[base-str exp-str] (str/split (lines i) #",")
 	base (Integer/parseInt base-str)
-	exp (Integer/parseInt exp-str)
-	log-value (* exp (log base))]
-    [log-value (inc idx)]))
+	exp (Integer/parseInt exp-str)]
+    (* exp (log base))))
 
 (timed-test
- "Problem 99"
  709
- (with-open [rdr (reader "../data/base_exp.txt")]
-   (let [lines (line-seq rdr)
-	 pairs (map-indexed process-line lines)]
-     (second (apply max-key first pairs)))))
+ (let [lines (str/split-lines (slurp "../data/base_exp.txt"))]
+   (inc (max-by #(line-value % lines) (range (count lines))))))
