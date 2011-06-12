@@ -11,23 +11,23 @@
 	(recur (unchecked-divide n (int 10))
                new-sum)))))
 
-;; Numbers whose chain reach 89 are "sad" numbers
-(defn sad? [n]
+(defn reaches-89? [n]
   (cond
+   (zero? n) false
    (= 1 n) false
    (= 89 n) true
    :else (recur (next-num n))))
 
-;; All n < 10^7 chain to a number < 568
-;; So create a sadness table for n < 568
-;; Then we can determine sadness for all n's by looking up (next-num n)
-(defn make-sad-table []
+;; For all n < 10^7, (next-num n) < 568
+;; So create a table for n < 568
+;; Then we can check all n's by simply looking up (next-num n)
+(defn make-table []
   (let [arr (boolean-array 568 false)]
-    (doseq [sad-n (filter sad? (range 2 568))]
-      (aset arr sad-n true))
+    (doseq [i (filter reaches-89? (range 568))]
+      (aset arr i true))
     arr))
 
 (timed-test
  8581146
- (let [^booleans table (make-sad-table)]
-   (count-if #(aget table (next-num %)) (range 2 10000000))))
+ (let [^booleans table (make-table)]
+   (count-if #(aget table (next-num %)) (range 10000000))))

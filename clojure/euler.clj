@@ -39,9 +39,6 @@
 (defn ceil [n]
   (math/ceil n))
 
-(defn digits [n]
-  (map #(Integer/parseInt (str %)) (str n)))
-
 (defn log [n]
   (math-functions/log n))
 
@@ -49,11 +46,20 @@
 (defn sum [coll]
   (reduce + coll))
 
+(defn product [coll]
+  (reduce * coll))
+
 (defn sum-if [pred coll]
   (sum (filter pred coll)))
 
+(defn count-if [pred coll]
+  (count (filter pred coll)))
+
 (defn max-of [coll]
   (if (seq coll) (reduce max coll)))
+
+(defn max-if [pred coll]
+  (max-of (filter pred coll)))
 
 (defn max-key [k & xs]
   (first (reduce (fn [x y] (if (> (second x) (second y)) x y))
@@ -69,14 +75,8 @@
 (defn min-by [k coll]
   (apply min-key k coll))
 
-(defn product [coll]
-  (reduce * coll))
-
 (defn find-first [pred coll]
   (first (filter pred coll)))
-
-(defn count-if [pred coll]
-  (count (filter pred coll)))
 
 (defn fmap [f coll]
   (functor/fmap f coll))
@@ -89,6 +89,7 @@
   (cond
    (< n 2) false
    (= n 2) true
+   (even? n) false
    :else (let [root (sqrt n)
                xs (cons 2 (range 3 (inc root) 2))]
            (not-any? #(divides? n %) xs))))
@@ -104,6 +105,21 @@
 	denominator (- (* 2 s) 4)]
     (integer? (/ numerator denominator))))
 
+(defn pandigital? [n]
+  (= (sort (str n)) '(\1 \2 \3 \4 \5 \6 \7 \8 \9)))
+
+;; Text functions
+(defn char-value [c]
+  (- (int c) 64))
+
+(defn word-value [s]
+  (sum (map char-value s)))
+
+(defn read-quoted-csv [f]
+  (-> (str/trim (slurp f))
+      (str/replace "\"" "")
+      (str/split #",")))
+
 ;; Sequences
 (defn fibs []
   (let [f (fn [[a b]] [b (+ a b)])]
@@ -114,6 +130,9 @@
 
 (defn triangles []
   (reductions + (naturals)))
+
+(defn digits [n]
+  (map #(Integer/parseInt (str %)) (str n)))
 
 (defn primes []
   (filter prime? (naturals)))
@@ -168,18 +187,6 @@
 
 (defn n-choose-k [n k]
   (/ (factorial n) (* (factorial k) (factorial (- n k)))))
-
-;; Text functions
-(defn char-value [c]
-  (- (int c) 64))
-
-(defn word-value [s]
-  (sum (map char-value s)))
-
-(defn read-quoted-csv [f]
-  (-> (str/trim (slurp f))
-      (str/replace "\"" "")
-      (str/split #",")))
 
 ;; Permutations
 ;; en.wikipedia.org/wiki/Permutation, Pandita's method
