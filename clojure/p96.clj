@@ -1,5 +1,5 @@
 (ns p96
-  (:use [euler :only (min-by sum timed-test)])
+  (:use [euler :only (min-key sum timed-test)])
   (:require [clojure.string :as str]))
 
 (defn cross [as bs]
@@ -8,57 +8,52 @@
 (defn all? [coll]
   (every? identity coll))
 
-(defn in? [x coll]
-  (some #{x} coll))
+(defn copy [values]
+  (atom @values))
 
-(defn set-values! [values s s-values]
-  (swap! values assoc s s-values))
-
-(defn copy [a]
-  (atom @a))
-
-(def digits "123456789")
+(def digits (set "123456789"))
 (def rows "ABCDEFGHI")
 (def cols digits)
 (def squares (cross rows cols))
-(def unitlist (concat (for [c cols]
-                        (cross rows (str c)))
-                      (for [r rows]
-                        (cross (str r) cols))
-                      (for [rs (partition 3 rows), cs (partition 3 cols)]
-                        (cross rs cs))))
-(def units (into {} (for [s squares]
-                      [s (filter #(in? s %) unitlist)])))
-(def peers (into {} (for [s squares]
-                      [s (set (remove #{s} (flatten (units s))))])))
+(def unitlist
+  (concat
+   (for [c cols] (cross rows [c]))
+   (for [r rows] (cross [r] cols))
+   (for [rs (partition 3 rows), cs (partition 3 cols)] (cross rs cs))))
+(def units
+  (into {} (for [s squares] [s (filter #(some #{s} %) unitlist)])))
+(def peers
+  (into {} (for [s squares] [s (disj (set (flatten (units s))) s)])))
 
 (declare assign eliminate helper-1 helper-2)
 
 (defn assign [values s d]
-  (let [other-values (remove #{d} (@values s))]
-    (if (all? (for [d2 other-values] (eliminate values s d2)))
+  (let [other-values (disj (@values s) d)]
+    (if (every? #(eliminate values s %) other-values)
       values)))
 
 (defn eliminate [values s d]
-  (if-not (in? d (@values s))
+  (if-not ((@values s) d)
     values
-    (let [other-values (remove #{d} (@values s))]
-      (set-values! values s other-values)
+    (let [other-values (disj (@values s) d)]
+      (swap! values assoc s other-values)
       (cond
-       (not (helper-1 values s d)) false
+       (not (helper-1 values s)) false
        (not (helper-2 values s d)) false
        :else values))))
 
-(defn helper-1 [values s d]
+;; If a square s is reduced to 1 value d2, then eliminate d2 from peers.
+(defn helper-1 [values s]
   (case (count (@values s))
 	0 false
 	1 (let [d2 (first (@values s))]
-	    (all? (for [s2 (peers s)] (eliminate values s2 d2))))
+            (every? #(eliminate values % d2) (peers s)))
 	true))
 
+;; If a unit u is reduced to 1 place for a value d, then put it there.
 (defn helper-2 [values s d]
   (all? (for [u (units s)]
-	  (let [dplaces (filter #(in? d (@values %)) u)]
+	  (let [dplaces (filter #((@values %) d) u)]
 	    (case (count dplaces)
 		  0 false
 		  1 (assign values (first dplaces) d)
@@ -68,17 +63,17 @@
   (zipmap squares grid))
 
 (defn parse-grid [grid]
-  (let [values (atom (into {} (for [s squares] [s digits])))]
-    (if (all? (for [[s d] (grid-values grid) :when (in? d digits)]
+  (let [values (atom (zipmap squares (repeat digits)))]
+    (if (all? (for [[s d] (grid-values grid) :when (digits d)]
                 (assign values s d)))
       values)))
 
 (defn search [values]
   (cond
    (not values) false
-   (all? (for [s squares] (= (count (@values s)) 1))) values
+   (every? #(= 1 (count (@values %))) squares) values
    :else (let [unfilled (filter #(> (count (@values %)) 1) squares)
-	       s (min-by #(count (@values %)) unfilled)]
+	       s (apply min-key #(count (@values %)) unfilled)]
 	   (some #(search (assign (copy values) s %)) (@values s)))))
 
 (defn solve [grid]
