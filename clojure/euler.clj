@@ -1,8 +1,5 @@
 (ns euler
-  (:require [clojure.string :as str])
-  (:require [clojure.contrib.generic.functor :as functor])
-  (:require [clojure.contrib.generic.math-functions :as math-functions])
-  (:require [clojure.contrib.math :as math]))
+  (:require [clojure.string :as str]))
 
 ;; Testing macro
 (defmacro timed-test [answer expr]
@@ -14,33 +11,38 @@
 
 ;; Basic functions
 (defn abs [n]
-  (math/abs n))
+  (java.lang.Math/abs n))
 
 (defn sqr [n]
   (* n n))
 
 (defn sqrt [n]
-  (math/sqrt n))
+  (java.lang.Math/sqrt n))
 
-(defn expt [base pow]
-  (math/expt base pow))
+;; http://en.wikipedia.org/wiki/Exponentiation_by_squaring
+(defn expt [x n]
+  (cond (zero? n) 1
+        (neg? n) (/ 1 (expt x (- n)))
+        (odd? n) (let [y (expt x (/ (dec n) 2))]
+                   (* x y y))
+        (even? n) (let [y (expt x (/ n 2))]
+                    (* y y))))
 
 (defn expt-mod-n [base pow n]
   (loop [pow pow
          acc 1]
     (let [new-acc (rem (* base acc) n)]
-      (cond
-       (< pow 0) (expt base pow)
-       (= pow 0) 1
-       (= pow 1) new-acc
-       :else (recur (dec pow)
-                    new-acc)))))
+      (cond (< pow 0) (expt base pow)
+            (= pow 0) 1
+            (= pow 1) new-acc
+            :else (recur (dec pow)
+                         new-acc)))))
 
 (defn ceil [n]
-  (math/ceil n))
+  (java.lang.Math/ceil n))
 
 (defn log [n]
-  (math-functions/log n))
+  (java.lang.Math/log n))
 
 ;; Sequence functions
 (defn sum [coll]
@@ -78,8 +80,15 @@
 (defn find-first [pred coll]
   (first (filter pred coll)))
 
-(defn fmap [f coll]
-  (functor/fmap f coll))
+;; From Konrad Hinsen's c.c.generic.functor library
+(defmulti fmap (fn [f coll] (type coll)))
+
+(defmethod fmap clojure.lang.IPersistentMap [f m]
+  (into {} (for [[k v] m]
+             [k (f v)])))
+
+(defmethod fmap :default [f coll]
+  (into (empty coll) (map f coll)))
 
 ;; Predicates
 (defn divides? [a b]
@@ -98,12 +107,14 @@
   (let [s (str n)]
     (= (seq s) (reverse s))))
 
-(defn s-gonal? [s n]
-  (let [a (* (- (* 8 s) 16) n)
+;; http://en.wikipedia.org/wiki/Polygonal_number#Formulae
+(defn s-gonal? [s x]
+  (let [a (* (- (* 8 s) 16) x)
 	b (sqr (- s 4))
-	numerator (- (+ (sqrt (+ a b)) s) 4)
-	denominator (- (* 2 s) 4)]
-    (integer? (/ numerator denominator))))
+	numerator (+ (sqrt (+ a b)) s -4)
+	denominator (- (* 2 s) 4)
+        n (/ numerator denominator)]
+    (zero? (rem n 1))))
 
 (defn pandigital? [n]
   (= (sort (str n)) '(\1 \2 \3 \4 \5 \6 \7 \8 \9)))

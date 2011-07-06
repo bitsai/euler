@@ -3,7 +3,7 @@
   (:require [clojure.string :as str]))
 
 (defn get-nodes [partial-orders]
-  (set (reduce into [] partial-orders)))
+  (reduce into #{} partial-orders))
 
 (defn get-adjacency-list [partial-orders]
   (let [pairs (mapcat #(partition 2 1 %) partial-orders)
