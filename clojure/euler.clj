@@ -24,7 +24,7 @@
   (cond (zero? n) 1
         (neg? n) (/ 1 (expt x (- n)))
         (odd? n) (let [y (expt x (/ (dec n) 2))]
-                   (* x y y))
+                   (* x (* y y)))
         (even? n) (let [y (expt x (/ n 2))]
                     (* y y))))
 
