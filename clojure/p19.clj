@@ -4,17 +4,17 @@
 
 (defn next-date [d]
   (let [new-d (.clone d)]
-    (.add new-d (. GregorianCalendar DATE) 1)
+    (.add new-d GregorianCalendar/DATE 1)
     new-d))
 
 (defn day-of-week [d]
-  (.get d (. GregorianCalendar DAY_OF_WEEK)))
+  (.get d GregorianCalendar/DAY_OF_WEEK))
 
 (defn day-of-month [d]
-  (.get d (. GregorianCalendar DAY_OF_MONTH)))
+  (.get d GregorianCalendar/DAY_OF_MONTH))
 
 (defn sunday-on-first-of-month? [d]
-  (and (= (day-of-week d) (. GregorianCalendar SUNDAY))
+  (and (= (day-of-week d) GregorianCalendar/SUNDAY)
        (= (day-of-month d) 1)))
 
 (timed-test

@@ -11,13 +11,13 @@
 
 ;; Basic functions
 (defn abs [n]
-  (java.lang.Math/abs n))
+  (Math/abs n))
 
 (defn sqr [n]
   (* n n))
 
 (defn sqrt [n]
-  (java.lang.Math/sqrt n))
+  (Math/sqrt n))
 
 ;; http://en.wikipedia.org/wiki/Exponentiation_by_squaring
 (defn expt [x n]
@@ -39,10 +39,10 @@
                          new-acc)))))
 
 (defn ceil [n]
-  (java.lang.Math/ceil n))
+  (Math/ceil n))
 
 (defn log [n]
-  (java.lang.Math/log n))
+  (Math/log n))
 
 ;; Sequence functions
 (defn sum [coll]
