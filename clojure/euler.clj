@@ -80,16 +80,6 @@
 (defn find-first [pred coll]
   (first (filter pred coll)))
 
-;; From Konrad Hinsen's c.c.generic.functor library
-(defmulti fmap (fn [f coll] (type coll)))
-
-(defmethod fmap clojure.lang.IPersistentMap [f m]
-  (into {} (for [[k v] m]
-             [k (f v)])))
-
-(defmethod fmap :default [f coll]
-  (into (empty coll) (map f coll)))
-
 ;; Predicates
 (defn divides? [a b]
   (zero? (rem a b)))
