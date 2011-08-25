@@ -1,36 +1,31 @@
 (ns p79
-  (:use [euler :only (fmap find-first timed-test)])
+  (:use [euler :only (timed-test)])
   (:require [clojure.string :as str]))
 
-(defn get-nodes [partial-orders]
-  (reduce into #{} partial-orders))
+(defn edges [node adj-list]
+  (filter #(= node (first %)) adj-list))
 
-(defn get-adjacency-list [partial-orders]
-  (let [pairs (mapcat #(partition 2 1 %) partial-orders)
-	groups (group-by second pairs)]
-    (fmap #(set (map first %)) groups)))
+(defn no-incoming? [node adj-list]
+  (not-any? #{node} (map second adj-list)))
 
-(defn no-edges? [node adjacency-list]
-  (zero? (count (adjacency-list node))))
-
-(defn remove-node [node adjacency-list]
-  (dissoc (fmap #(disj % node) adjacency-list) node))
-
-(defn topological-sort [nodes adjacency-list]
-  (loop [nodes nodes
-         adjacency-list adjacency-list
-         output []]
-    (if-let [n (find-first #(no-edges? % adjacency-list) nodes)]
-      (recur (disj nodes n)
-             (remove-node n adjacency-list)
-             (conj output n))
-      (if (empty? adjacency-list)
-        output
-        (throw (Exception. "cyclic graph!"))))))
+;; http://en.wikipedia.org/wiki/Topological_sorting#Algorithms
+(defn topological-sort [nodes adj-list]
+  (loop [S (filter #(no-incoming? % adj-list) nodes)
+         L []
+         adj-list adj-list]
+    (cond (seq S) (let [[n & ns] S
+                        es (edges n adj-list)
+                        adj-list2 (remove (set es) adj-list)
+                        ms (map second es)]
+                    (recur (concat ns (filter #(no-incoming? % adj-list2) ms))
+                           (conj L n)
+                           adj-list2))
+          (seq adj-list) (throw (Exception. "Cyclic graph!"))
+          :else L)))
 
 (timed-test
- '(\7 \3 \1 \6 \2 \8 \9 \0)
+ "73162890"
  (let [logins (str/split-lines (slurp "../data/keylog.txt"))
-       nodes (get-nodes logins)
-       adjacency-list (get-adjacency-list logins)]
-   (topological-sort nodes adjacency-list)))
+       nodes (distinct (apply concat logins))
+       adj-list (distinct (mapcat #(partition 2 1 %) logins))]
+   (apply str (topological-sort nodes adj-list))))
