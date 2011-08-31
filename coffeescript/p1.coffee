@@ -1,6 +1,4 @@
-sum = (xs...) ->
-  output = 0
-  output += x for x in xs
-  output
+euler = require './euler.coffee'
+_ = require './underscore.js'
 
-alert sum (x for x in [0...1000] when x % 3 == 0 or x % 5 == 0)...
+console.log euler.sum _.select [0...1000], (x) -> x % 3 == 0 or x % 5 == 0

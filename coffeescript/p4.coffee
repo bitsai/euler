@@ -1,9 +1,5 @@
-isPalindrome = (x) ->
-  s = x.toString()
-  for i in [0...s.length / 2]
-    if s[i] != s[s.length - 1 - i]
-      return false
-  return true
+euler = require './euler.coffee'
+_ = require './underscore.js'
 
 products = () ->
   output = []
@@ -12,4 +8,4 @@ products = () ->
       output.push (x * y)
   output
 
-alert Math.max (x for x in products() when isPalindrome x)...
+console.log _.max _.select products(), euler.isPalindrome
