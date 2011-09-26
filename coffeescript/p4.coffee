@@ -3,8 +3,8 @@ _ = require './underscore.js'
 
 products = () ->
   output = []
-  for x in [100...1000]
-    for y in [x...1000]
+  for x in [100..999]
+    for y in [x..999]
       output.push (x * y)
   output
 

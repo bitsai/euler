@@ -1,4 +1,4 @@
 euler = require './euler.coffee'
 _ = require './underscore.js'
 
-console.log _.reduce [1...21], euler.lcm, 1
+console.log _.reduce [1..20], euler.lcm, 1
