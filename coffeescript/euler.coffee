@@ -1,15 +1,5 @@
 _ = require './underscore.js'
 
-exports.factors = (x) ->
-  output = []
-  root = Math.sqrt x
-  for y in [0...root]
-    if x % y == 0
-      output.push y
-      output.push x / y
-  if x % root == 0 then output.push root
-  output
-
 exports.fibs = (max) ->
   if max == 0 then return [0]
   output = [0, 1]
@@ -21,6 +11,9 @@ exports.gcd = (x, y) ->
   if y == 0 then x
   else exports.gcd y, x % y
 
+exports.lcm = (x, y) ->
+  (Math.abs (x * y)) / (exports.gcd x, y)
+
 exports.isPalindrome = (x) ->
   s = x.toString()
   for i in [0...s.length / 2]
@@ -28,12 +21,40 @@ exports.isPalindrome = (x) ->
       return false
   true
 
+exports.factors = (x) ->
+  output = []
+  root = Math.sqrt x
+  for y in [0...root]
+    if x % y == 0
+      output.push y
+      output.push x / y
+  if x % root == 0 then output.push root
+  output
+
 exports.isPrime = (x) ->
   (exports.factors x).length == 2
 
-exports.lcm = (x, y) ->
-  (Math.abs (x * y)) / (exports.gcd x, y)
+exports.nthPrime = (n) ->
+  primes = []
+  x = 2
+  if n < 1 then return null
+  while primes.length < n
+    if exports.isPrime x then primes.push x
+    x = x + 1
+  primes.pop()
 
 exports.sum = (xs) ->
   add = (x, y) -> x + y
   _.reduce xs, add, 0
+
+exports.product = (xs) ->
+  multiply = (x, y) -> x * y
+  _.reduce xs, multiply, 1
+
+exports.partition = (n, step, coll) ->
+  partitions = []
+  xs = coll
+  while xs.length >= n
+    partitions.push xs.slice 0, n
+    xs = xs.slice step
+  partitions
