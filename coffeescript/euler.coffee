@@ -1,18 +1,16 @@
 _ = require './underscore.js'
 
-exports.fibs = (max) ->
-  if max == 0 then return [0]
-  output = [0, 1]
-  while (x = output[output.length - 1] + output[output.length - 2]) <= max
-    output.push x
-  output
+exports.fibs = (n) ->
+  fibs = [0, 1]
+  while (f = fibs[fibs.length - 1] + fibs[fibs.length - 2]) < n
+    fibs.push f
+  _.select fibs, (f) -> f < n
 
 exports.gcd = (x, y) ->
-  if y == 0 then x
-  else exports.gcd y, x % y
+  if y == 0 then x else exports.gcd y, x % y
 
 exports.lcm = (x, y) ->
-  (Math.abs (x * y)) / (exports.gcd x, y)
+  (Math.abs x * y) / (exports.gcd x, y)
 
 exports.isPalindrome = (x) ->
   s = x.toString()
@@ -22,14 +20,14 @@ exports.isPalindrome = (x) ->
   true
 
 exports.factors = (x) ->
-  output = []
+  facts = []
   root = Math.sqrt x
-  for y in [0...root]
+  for y in [1...root]
     if x % y == 0
-      output.push y
-      output.push x / y
-  if x % root == 0 then output.push root
-  output
+      facts.push y
+      facts.push x / y
+  if x % root == 0 then facts.push root
+  facts
 
 exports.isPrime = (x) ->
   (exports.factors x).length == 2
@@ -37,33 +35,32 @@ exports.isPrime = (x) ->
 exports.nthPrime = (n) ->
   primes = []
   x = 2
-  if n < 1 then return null
   while primes.length < n
     if exports.isPrime x then primes.push x
     x = x + 1
   primes.pop()
 
 exports.primeSieve = (n) ->
-  xs = (x for x in [0...n] by 1)
-  xs[0] = xs[1] = null
+  primes = (x for x in [0...n] by 1)
+  primes[0] = primes[1] = false
   for p in [2..Math.sqrt n] by 1
-    if xs[p] != null
+    if primes[p] != false
       for x in [p * p..n] by p
-        xs[x] = null
-  _.reject xs, _.isNull
+        primes[x] = false
+  _.reject primes, (x) -> x == false
 
 exports.sum = (xs) ->
   add = (x, y) -> x + y
   _.reduce xs, add, 0
 
 exports.product = (xs) ->
-  multiply = (x, y) -> x * y
-  _.reduce xs, multiply, 1
+  mult = (x, y) -> x * y
+  _.reduce xs, mult, 1
 
 exports.partition = (n, step, coll) ->
-  partitions = []
+  parts = []
   xs = coll
   while xs.length >= n
-    partitions.push xs.slice 0, n
+    parts.push xs.slice 0, n
     xs = xs.slice step
-  partitions
+  parts
