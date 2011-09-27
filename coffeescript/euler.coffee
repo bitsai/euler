@@ -41,13 +41,16 @@ exports.nthPrime = (n) ->
   primes.pop()
 
 exports.primeSieve = (n) ->
-  primes = (x for x in [0...n] by 1)
-  primes[0] = primes[1] = false
-  for p in [2..Math.sqrt n] by 1
-    if primes[p] != false
-      for x in [p * p..n] by p
-        primes[x] = false
-  _.reject primes, (x) -> x == false
+  if n <= 2 then return []
+  primes = [2].concat (x for x in [3...n] by 2)
+  root = Math.sqrt n
+  i = 1
+  while (p = primes[i]) <= root
+    if p != null
+      for x in [p * p...n] by 2 * p
+        primes[Math.floor (x / 2)] = null
+    i = i + 1
+  _.reject primes, _.isNull
 
 exports.sum = (xs) ->
   add = (x, y) -> x + y
