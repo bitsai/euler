@@ -43,6 +43,15 @@ exports.nthPrime = (n) ->
     x = x + 1
   primes.pop()
 
+exports.primeSieve = (n) ->
+  xs = (x for x in [0...n] by 1)
+  xs[0] = xs[1] = null
+  for x in [2..Math.sqrt n] by 1
+    if xs[x] != null
+      for p in [(x * x)..n] by x
+        xs[p] = null
+  _.reject xs, _.isNull
+
 exports.sum = (xs) ->
   add = (x, y) -> x + y
   _.reduce xs, add, 0
